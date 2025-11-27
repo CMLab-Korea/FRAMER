@@ -392,7 +392,7 @@
       </div>
     </div>
 </section>
-
+  
 <section class="section">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered section-title">Method Overview</h2>
@@ -401,8 +401,8 @@
            <img src="./images/method.png" alt="FRAMER Framework" style="border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
         </div>
       </div>
-      <div class="content has-text-justified" style="margin-top: 25px;">
-        <p class="is-size-5">
+      <div class="content has-text-left" style="margin-top: 25px;">
+        <p class="is-size-5 has-text-justified">
            <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
         </p>
         
@@ -410,32 +410,32 @@
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">IntraCL (LF)</h5>
-                    <p><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning.</p>
+                    <p class="has-text-left"><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning.</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">InterCL (HF)</h5>
-                    <p><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias.</p>
+                    <p class="has-text-left"><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias.</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">FAW</h5>
-                    <p><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias.</p>
+                    <p class="has-text-left"><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias.</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">FAM</h5>
-                    <p><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse.</p>
+                    <p class="has-text-left"><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse.</p>
                 </div>
             </div>
         </div>
       </div>
     </div>
 </section>
-
+  
 <section class="section">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered section-title">Quantitative Results</h2>
