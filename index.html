@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="FRAMER: Frequency-Aligned Self-Distillation with Adaptive Modulation Leveraging Diffusion Priors for Real-World Image Super-Resolution">
+  <meta name="keywords" content="FRAMER, Super-Resolution, Diffusion Models, Computer Vision, CMLab, Real-ISR, CVPR">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FRAMER: Real-World Image Super-Resolution</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  
+  <script defer src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"/>
+
+  <style>
+    /* --- CMLab Identity & Dark Theme --- */
+    :root {
+        --lab-color: #0D207F;     /* CMLab Official Blue */
+        --lab-light: #4c6ef5;     /* Lighter Blue for text */
+        --bg-color: #0f111a;      /* Deep Dark Background */
+        --card-bg: #1a1c29;       /* Card Background */
+        --text-color: #e0e0e0;
+        --accent-gradient: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Google Sans', sans-serif;
+    }
+
+    /* Typography */
+    .title { color: #ffffff !important; }
+    .subtitle { color: #b0b0b0 !important; }
+    a { color: var(--lab-light); transition: color 0.3s ease; }
+    a:hover { color: #fff; }
+
+    /* Hip Animated Gradient Text */
+    .gradient-text {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: shine 4s linear infinite;
+        font-weight: 800;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    /* Glassmorphism Buttons */
+    .button.is-dark-custom {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .button.is-dark-custom:hover {
+        background: var(--lab-color);
+        border-color: var(--lab-light);
+        box-shadow: 0 0 20px rgba(13, 32, 127, 0.6);
+        transform: translateY(-3px);
+    }
+
+    /* Comparison Slider Styling */
+    img-comparison-slider {
+        --divider-width: 2px;
+        --divider-color: #00f2fe;
+        --default-handle-opacity: 1;
+        border-radius: 12px;
+        outline: none;
+        transition: box-shadow 0.3s ease;
+    }
+    .slider-shadow {
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .slider-shadow:hover {
+        box-shadow: 0 30px 60px rgba(13, 32, 127, 0.4);
+    }
+
+    /* Captions inside Slider */
+    img-comparison-slider figcaption {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        position: absolute;
+        top: 15px;
+        font-size: 0.85rem;
+        pointer-events: none;
+        backdrop-filter: blur(4px);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: bold;
+    }
+    .before figcaption { left: 15px; }
+    .after figcaption { right: 15px; color: #00f2fe; }
+
+    /* Boxes & TL;DR */
+    .tldr-box {
+        background: rgba(13, 32, 127, 0.15);
+        border-left: 4px solid var(--lab-color);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 3rem;
+    }
+    .glass-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    /* Tables */
+    .table-container table {
+        background-color: transparent;
+        color: #ddd;
+        width: 100%;
+    }
+    .table-container th {
+        background-color: var(--lab-color);
+        color: white;
+        border: none;
+    }
+    .table-container td {
+        border-bottom: 1px solid #333;
+    }
+    .best-score { color: #00f2fe; font-weight: bold; }
+    .second-best { color: #4facfe; text-decoration: underline; }
+
+    /* Footer */
+    .footer { background-color: #050505; padding: 3rem 1.5rem; }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          
+          <div style="margin-bottom: 20px;">
+             <span class="icon is-large" style="font-size: 3.5rem; color: white;">
+                <i class="fas fa-layer-group"></i>
+             </span>
+          </div>
+
+          <h1 class="title is-1 publication-title">
+            <span class="gradient-text">FRAMER</span><br>
+            <span class="is-size-3">Frequency-Aligned Self-Distillation with Adaptive Modulation<br>Leveraging Diffusion Priors for Real-World Image Super-Resolution</span>
+          </h1>
+          
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="mailto:choiseungho1019@gmail.com">Seungho Choi</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="mailto:jhseong@cau.ac.kr">Jeahun Sung</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://cmlab-korea.github.io/" target="_blank">Jihyong Oh</a><sup>1,†</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors" style="margin-top: 10px;">
+            <span class="author-block"><sup>1</sup>Chung-Ang University</span>
+          </div>
+          <div style="margin-top: 8px;">
+             <span style="font-weight: bold; font-size: 1.1rem; color: #fff;">
+                Creative Vision and Multimedia Lab (CMLab)
+             </span>
+          </div>
+          <div class="is-size-7" style="color: #888; margin-top: 5px;">
+            <sup>†</sup>Corresponding Author
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark-custom">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2412.xxxx" class="external-link button is-normal is-rounded is-dark-custom">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/cmlab-korea/FRAMER" class="external-link button is-normal is-rounded is-dark-custom">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+            </div>
+          </div>
+          
+          <div class="is-size-6" style="margin-top: 15px; color: #aaa;">
+            <p>Comments: Please visit our project page at <a href="https://cmlab-korea.github.io/FRAMER/">https://cmlab-korea.github.io/FRAMER/</a></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      
+      <div class="tldr-box">
+          <h3 class="title is-5" style="color: var(--lab-light); margin-bottom: 0.5rem;">TL;DR</h3>
+          <p class="is-size-5">
+              [cite_start]<strong>FRAMER</strong> unlocks the high-frequency potential of diffusion models for Real-World Super-Resolution[cite: 26]. 
+              [cite_start]We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones[cite: 33].
+          </p>
+      </div>
+
+      <h2 class="title is-3 has-text-centered" style="margin-bottom: 40px;">Restoration Capability</h2>
+      
+      <div class="columns is-centered is-variable is-8">
+        
+        <div class="column is-6 has-text-centered">
+            <div class="glass-box">
+                <h3 class="title is-4" style="margin-bottom: 15px;">
+                    <span class="gradient-text">FRAMER<sub>D</sub></span> <span class="is-size-6" style="color:#aaa">(DiT Backbone)</span>
+                </h3>
+                <img-comparison-slider class="slider-shadow">
+                  <figure slot="first" class="before">
+                    <img width="100%" src="./images/tiger_lr.jpg" alt="LR Input">
+                    <figcaption>LR Input</figcaption>
+                  </figure>
+                  <figure slot="second" class="after">
+                    <img width="100%" src="./images/tiger_framer.jpg" alt="FRAMER_D Result">
+                    <figcaption>FRAMER<sub>D</sub></figcaption>
+                  </figure>
+                </img-comparison-slider>
+                <p class="is-size-7 has-text-left" style="margin-top: 15px; color: #bbb;">
+                    [cite_start]Restores intricate fur textures and fine details, overcoming the smoothing artifacts typical of diffusion models[cite: 21, 44].
+                </p>
+            </div>
+        </div>
+
+        <div class="column is-6 has-text-centered">
+            <div class="glass-box">
+                <h3 class="title is-4" style="margin-bottom: 15px;">
+                    <span class="gradient-text">FRAMER<sub>U</sub></span> <span class="is-size-6" style="color:#aaa">(U-Net Backbone)</span>
+                </h3>
+                <img-comparison-slider class="slider-shadow">
+                  <figure slot="first" class="before">
+                    <img width="100%" src="./images/aurora_lr.jpg" alt="LR Input">
+                    <figcaption>LR Input</figcaption>
+                  </figure>
+                  <figure slot="second" class="after">
+                    <img width="100%" src="./images/aurora_framer.jpg" alt="FRAMER_U Result">
+                    <figcaption>FRAMER<sub>U</sub></figcaption>
+                  </figure>
+                </img-comparison-slider>
+                <p class="is-size-7 has-text-left" style="margin-top: 15px; color: #bbb;">
+                    Effectively sharpens natural landscapes and starry skies, demonstrating robust generalization on the U-Net architecture.
+                </p>
+            </div>
+        </div>
+      </div>
+      
+      <div class="content has-text-centered is-size-7" style="color: #666; margin-top: 20px;">
+        <i class="fas fa-arrows-alt-h"></i> Slide to compare <strong>Low-Resolution</strong> vs <strong>FRAMER</strong>.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            [cite_start]Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations[cite: 24]. [cite_start]While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a low-frequency (LF) bias and a depth-wise "low-first, high-later" hierarchy[cite: 25].
+          </p>
+          <p>
+            [cite_start]We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference[cite: 26]. At each denoising step, the final-layer feature map teaches all intermediate layers. [cite_start]Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy[cite: 27, 28].
+          </p>
+          <p>
+            [cite_start]For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure[cite: 30]. [cite_start]For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives[cite: 31]. [cite_start]Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity[cite: 32]. [cite_start]Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ)[cite: 33].
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Method Overview</h2>
+      <div class="columns is-centered">
+        <div class="column is-full-width has-text-centered">
+           <img src="./static/images/method.jpg" alt="FRAMER Framework" style="border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+        </div>
+      </div>
+      <div class="content has-text-justified" style="margin-top: 20px;">
+          <p>
+              [cite_start]<strong>Figure 4.</strong> Overview of FRAMER[cite: 159]. The framework is a training-only strategy that applies:
+          </p>
+          <ul>
+              [cite_start]<li><strong>Frequency Decomposition:</strong> Separates features into LF and HF bands using FFT[cite: 168].</li>
+              [cite_start]<li><strong>IntraCL (LF):</strong> Compares student features with the teacher within the same image to stabilize structure[cite: 169].</li>
+              [cite_start]<li><strong>InterCL (HF):</strong> Uses in-batch negatives to sharpen details and instance discrimination[cite: 170].</li>
+              [cite_start]<li><strong>FAW & FAM:</strong> Adaptively weights and gates the losses based on the "low-first, high-later" hierarchy[cite: 171, 172].</li>
+          </ul>
+      </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Quantitative Results</h2>
+      <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2" style="border-radius: 8px 0 0 0;">Dataset</th>
+                    <th rowspan="2">Method</th>
+                    <th colspan="3">Fidelity Metrics</th>
+                    <th colspan="3" style="border-radius: 0 8px 0 0;">Perceptual Metrics</th>
+                </tr>
+                <tr>
+                    <th>PSNR ↑</th>
+                    <th>SSIM ↑</th>
+                    <th>LPIPS ↓</th>
+                    <th>NIQE ↓</th>
+                    <th>MANIQA ↑</th>
+                    <th>MUSIQ ↑</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    [cite_start]<td rowspan="4" style="vertical-align: middle;"><strong>RealSR</strong><br>[cite: 4]</td>
+                    [cite_start]<td>SwinIR [cite: 24]</td>
+                    <td>23.56</td>
+                    <td>0.719</td>
+                    <td>0.378</td>
+                    <td>5.605</td>
+                    <td>0.359</td>
+                    <td>61.47</td>
+                </tr>
+                <tr>
+                    [cite_start]<td>SeeSR [cite: 48]</td>
+                    <td>23.69</td>
+                    <td>0.700</td>
+                    <td>0.386</td>
+                    <td>5.337</td>
+                    <td>0.542</td>
+                    <td>69.80</td>
+                </tr>
+                <tr>
+                    [cite_start]<td>PiSA-SR [cite: 39]</td>
+                    <td>24.00</td>
+                    <td>0.719</td>
+                    <td>0.355</td>
+                    <td>5.902</td>
+                    <td>0.412</td>
+                    <td>68.20</td>
+                </tr>
+                <tr style="background-color: rgba(13, 32, 127, 0.3);">
+                    <td><strong>FRAMER (Ours)</strong></td>
+                    <td class="best-score">24.81</td>
+                    <td class="best-score">0.746</td>
+                    <td class="best-score">0.328</td>
+                    <td class="best-score">5.513</td>
+                    <td class="best-score">0.484</td>
+                    <td class="best-score">70.15</td>
+                </tr>
+                
+                <tr><td colspan="8" style="height:10px; border:none;"></td></tr>
+
+                <tr>
+                    [cite_start]<td rowspan="3" style="vertical-align: middle;"><strong>RealLR200</strong><br>[cite: 48]</td>
+                    <td>SeeSR</td>
+                    <td>-</td><td>-</td><td>-</td>
+                    <td>3.693</td>
+                    <td>0.343</td>
+                    <td>64.59</td>
+                </tr>
+                <tr>
+                    <td>PiSA-SR</td>
+                    <td>-</td><td>-</td><td>-</td>
+                    <td>5.305</td>
+                    <td>0.361</td>
+                    <td>61.24</td>
+                </tr>
+                <tr style="background-color: rgba(13, 32, 127, 0.3);">
+                    <td><strong>FRAMER (Ours)</strong></td>
+                    <td>-</td><td>-</td><td>-</td>
+                    <td class="best-score">4.381</td>
+                    <td class="best-score">0.525</td>
+                    <td class="best-score">71.38</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="is-size-7 has-text-centered" style="margin-top: 10px; color: #888;">
+            * Highlights indicate best performance. [cite_start]FRAMER achieves state-of-the-art perceptual quality on benchmarks [cite: 280-282].
+        </p>
+      </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">More Visual Comparisons</h2>
+        
+        <div class="columns is-multiline is-centered">
+            
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5 has-text-centered">Structure Restoration</h5>
+                    <img-comparison-slider class="slider-shadow">
+                        <figure slot="first" class="before">
+                            <img width="100%" src="./static/images/comp_traffic_lr.jpg" alt="LR">
+                            <figcaption>LR Input</figcaption>
+                        </figure>
+                        <figure slot="second" class="after">
+                            <img width="100%" src="./static/images/comp_traffic_out.jpg" alt="FRAMER">
+                            <figcaption>FRAMER</figcaption>
+                        </figure>
+                    </img-comparison-slider>
+                    [cite_start]<p class="is-size-7 has-text-centered mt-2">Recovering sharp geometric structures (e.g., Traffic Lights)[cite: 608].</p>
+                </div>
+            </div>
+
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5 has-text-centered">Texture Restoration</h5>
+                    <img-comparison-slider class="slider-shadow">
+                        <figure slot="first" class="before">
+                            <img width="100%" src="./static/images/comp_parrot_lr.jpg" alt="LR">
+                            <figcaption>LR Input</figcaption>
+                        </figure>
+                        <figure slot="second" class="after">
+                            <img width="100%" src="./static/images/comp_parrot_out.jpg" alt="FRAMER">
+                            <figcaption>FRAMER</figcaption>
+                        </figure>
+                    </img-comparison-slider>
+                    [cite_start]<p class="is-size-7 has-text-centered mt-2">Restoring natural details in the wild (e.g., Feathers)[cite: 710].</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{choi2024framer,
+  title={FRAMER: Frequency-Aligned Self-Distillation with Adaptive Modulation Leveraging Diffusion Priors for Real-World Image Super-Resolution},
+  author={Choi, Seungho and Sung, Jeahun and Oh, Jihyong},
+  journal={arXiv preprint arXiv:2412.xxxx},
+  year={2024}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+        <div style="margin-bottom: 20px;">
+            <h4 class="title is-5" style="color: white; letter-spacing: 2px;">CMLab</h4>
+        </div>
+        
+      <p class="is-size-7" style="color: #666;">
+        This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br>
+        Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+      </p>
+      
+      <div style="margin-top: 10px; color: #444;">
+          <span class="icon"><i class="fas fa-eye"></i></span> <span>Page Views: <span style="color: var(--lab-light);">1,402</span></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
