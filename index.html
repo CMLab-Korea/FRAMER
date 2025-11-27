@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="FRAMER: Frequency-Aligned Self-Distillation with Adaptive Modulation Leveraging Diffusion Priors for Real-World Image Super-Resolution">
-  <meta name="keywords" content="FRAMER, Super-Resolution, Diffusion Models, Computer Vision, CMLab, Real-ISR, CVPR">
+  <meta name="keywords" content="Super-Resolution, Diffusion Models, Computer Vision, Real-ISR">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FRAMER: Real-World Image Super-Resolution</title>
 
@@ -180,12 +180,6 @@
           <div class="column has-text-centered">
             <div class="publication-links">
               <span class="link-block">
-                <a href="#" class="external-link button is-normal is-rounded is-dark-custom">
-                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
                 <a href="https://arxiv.org/abs/2412.xxxx" class="external-link button is-normal is-rounded is-dark-custom">
                   <span class="icon"><i class="ai ai-arxiv"></i></span>
                   <span>arXiv</span>
@@ -199,10 +193,7 @@
               </span>
             </div>
           </div>
-          
-          <div class="is-size-6" style="margin-top: 15px; color: #aaa;">
-            <p>Comments: Please visit our project page at <a href="https://cmlab-korea.github.io/FRAMER/">https://cmlab-korea.github.io/FRAMER/</a></p>
-          </div>
+        
 
         </div>
       </div>
@@ -217,8 +208,8 @@
       <div class="tldr-box">
           <h3 class="title is-5" style="color: var(--lab-light); margin-bottom: 0.5rem;">TL;DR</h3>
           <p class="is-size-5">
-              [cite_start]<strong>FRAMER</strong> unlocks the high-frequency potential of diffusion models for Real-World Super-Resolution[cite: 26]. 
-              [cite_start]We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones[cite: 33].
+              <strong>FRAMER</strong> unlocks the high-frequency potential of diffusion models for Real-World Super-Resolution. 
+              We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones.
           </p>
       </div>
 
@@ -242,7 +233,7 @@
                   </figure>
                 </img-comparison-slider>
                 <p class="is-size-7 has-text-left" style="margin-top: 15px; color: #bbb;">
-                    [cite_start]Restores intricate fur textures and fine details, overcoming the smoothing artifacts typical of diffusion models[cite: 21, 44].
+                    Restores intricate fur textures and fine details, overcoming the smoothing artifacts typical of diffusion models.
                 </p>
             </div>
         </div>
@@ -284,13 +275,13 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            [cite_start]Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations[cite: 24]. [cite_start]While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a low-frequency (LF) bias and a depth-wise "low-first, high-later" hierarchy[cite: 25].
+            Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a low-frequency (LF) bias and a depth-wise "low-first, high-later" hierarchy.
           </p>
           <p>
-            [cite_start]We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference[cite: 26]. At each denoising step, the final-layer feature map teaches all intermediate layers. [cite_start]Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy[cite: 27, 28].
+            We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference. At each denoising step, the final-layer feature map teaches all intermediate layers. Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy.
           </p>
           <p>
-            [cite_start]For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure[cite: 30]. [cite_start]For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives[cite: 31]. [cite_start]Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity[cite: 32]. [cite_start]Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ)[cite: 33].
+            For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure. For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives. Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity. Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ).
           </p>
         </div>
       </div>
@@ -308,13 +299,13 @@
       </div>
       <div class="content has-text-justified" style="margin-top: 20px;">
           <p>
-              [cite_start]<strong>Figure 4.</strong> Overview of FRAMER[cite: 159]. The framework is a training-only strategy that applies:
+              <strong>Figure 4.</strong> Overview of FRAMER. The framework is a training-only strategy that applies:
           </p>
           <ul>
-              [cite_start]<li><strong>Frequency Decomposition:</strong> Separates features into LF and HF bands using FFT[cite: 168].</li>
-              [cite_start]<li><strong>IntraCL (LF):</strong> Compares student features with the teacher within the same image to stabilize structure[cite: 169].</li>
-              [cite_start]<li><strong>InterCL (HF):</strong> Uses in-batch negatives to sharpen details and instance discrimination[cite: 170].</li>
-              [cite_start]<li><strong>FAW & FAM:</strong> Adaptively weights and gates the losses based on the "low-first, high-later" hierarchy[cite: 171, 172].</li>
+              <li><strong>Frequency Decomposition:</strong> Separates features into LF and HF bands using FFT.</li>
+              <li><strong>IntraCL (LF):</strong> Compares student features with the teacher within the same image to stabilize structure.</li>
+              <li><strong>InterCL (HF):</strong> Uses in-batch negatives to sharpen details and instance discrimination.</li>
+              <li><strong>FAW & FAM:</strong> Adaptively weights and gates the losses based on the "low-first, high-later" hierarchy.</li>
           </ul>
       </div>
     </div>
@@ -343,8 +334,8 @@
             </thead>
             <tbody>
                 <tr>
-                    [cite_start]<td rowspan="4" style="vertical-align: middle;"><strong>RealSR</strong><br>[cite: 4]</td>
-                    [cite_start]<td>SwinIR [cite: 24]</td>
+                    <td rowspan="4" style="vertical-align: middle;"><strong>RealSR</strong><br></td>
+                    <td>SwinIR [cite: 24]</td>
                     <td>23.56</td>
                     <td>0.719</td>
                     <td>0.378</td>
@@ -353,7 +344,7 @@
                     <td>61.47</td>
                 </tr>
                 <tr>
-                    [cite_start]<td>SeeSR [cite: 48]</td>
+                    <td>SeeSR [cite: 48]</td>
                     <td>23.69</td>
                     <td>0.700</td>
                     <td>0.386</td>
@@ -362,7 +353,7 @@
                     <td>69.80</td>
                 </tr>
                 <tr>
-                    [cite_start]<td>PiSA-SR [cite: 39]</td>
+                    <td>PiSA-SR [cite: 39]</td>
                     <td>24.00</td>
                     <td>0.719</td>
                     <td>0.355</td>
@@ -383,7 +374,7 @@
                 <tr><td colspan="8" style="height:10px; border:none;"></td></tr>
 
                 <tr>
-                    [cite_start]<td rowspan="3" style="vertical-align: middle;"><strong>RealLR200</strong><br>[cite: 48]</td>
+                    <td rowspan="3" style="vertical-align: middle;"><strong>RealLR200</strong><br>[cite: 48]</td>
                     <td>SeeSR</td>
                     <td>-</td><td>-</td><td>-</td>
                     <td>3.693</td>
@@ -407,7 +398,7 @@
             </tbody>
         </table>
         <p class="is-size-7 has-text-centered" style="margin-top: 10px; color: #888;">
-            * Highlights indicate best performance. [cite_start]FRAMER achieves state-of-the-art perceptual quality on benchmarks [cite: 280-282].
+            * Highlights indicate best performance. FRAMER achieves state-of-the-art perceptual quality on benchmarks.
         </p>
       </div>
     </div>
@@ -432,7 +423,7 @@
                             <figcaption>FRAMER</figcaption>
                         </figure>
                     </img-comparison-slider>
-                    [cite_start]<p class="is-size-7 has-text-centered mt-2">Recovering sharp geometric structures (e.g., Traffic Lights)[cite: 608].</p>
+                    <p class="is-size-7 has-text-centered mt-2">Recovering sharp geometric structures (e.g., Traffic Lights).</p>
                 </div>
             </div>
 
@@ -449,7 +440,7 @@
                             <figcaption>FRAMER</figcaption>
                         </figure>
                     </img-comparison-slider>
-                    [cite_start]<p class="is-size-7 has-text-centered mt-2">Restoring natural details in the wild (e.g., Feathers)[cite: 710].</p>
+                    <p class="is-size-7 has-text-centered mt-2">Restoring natural details in the wild (e.g., Feathers).</p>
                 </div>
             </div>
 
