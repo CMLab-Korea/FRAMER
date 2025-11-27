@@ -21,7 +21,7 @@
     /* --- CMLab Identity & Dark Theme --- */
     :root {
         --lab-color: #0D207F;     /* CMLab Official Blue */
-        --lab-light: #4c6ef5;     /* Lighter Blue for text enhancement */
+        --lab-light: #4c6ef5;     /* Lighter Blue */
         --bg-color: #0f111a;      /* Deep Dark Background */
         --card-bg: #1a1c29;       /* Card Background */
         --text-color: #e0e0e0;
@@ -41,13 +41,12 @@
     a { color: var(--lab-light); transition: color 0.3s ease; }
     a:hover { color: #fff; text-decoration: underline; }
 
-    /* [Modification] Strong Text Color -> Lab Color */
     strong {
         color: var(--lab-light);
         font-weight: 700;
     }
 
-    /* Hip Animated Gradient Text */
+    /* Gradient Text */
     .gradient-text {
         background: var(--accent-gradient);
         -webkit-background-clip: text;
@@ -58,7 +57,7 @@
     }
     @keyframes shine { to { background-position: 200% center; } }
 
-    /* Glassmorphism Buttons */
+    /* Buttons */
     .button.is-dark-custom {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
@@ -73,46 +72,73 @@
         transform: translateY(-3px);
     }
 
-    /* [Modification] Slider Styling - Bigger & Equal Sizing */
+    /* --- [CORE FIX] Slider Styling to match Screenshot --- */
+    .slider-container {
+        width: 100%;
+        /* Force Square Aspect Ratio (1:1) */
+        aspect-ratio: 1 / 1; 
+        overflow: hidden;
+        border-radius: 12px;
+        position: relative;
+        background: #000; /* Loading placeholder color */
+    }
+    
     img-comparison-slider {
         --divider-width: 2px;
-        --divider-color: #00f2fe;
+        --divider-color: #00f2fe; /* Cyan divider */
         --default-handle-opacity: 1;
         width: 100%;
-        border-radius: 12px;
+        height: 100%; 
         outline: none;
-        transition: box-shadow 0.3s ease;
     }
+
+    /* Ensure images cover the square area perfectly without distortion */
+    img-comparison-slider img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        object-position: center;
+        display: block;
+    }
+
+    /* Shadow effect for the slider box */
     .slider-shadow {
         box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        transition: box-shadow 0.3s ease;
     }
     .slider-shadow:hover {
         box-shadow: 0 30px 60px rgba(13, 32, 127, 0.4);
     }
-    
-    .slider-container img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
 
-    /* Captions inside Slider */
+    /* --- Badge Styling (LR INPUT / FRAMER) --- */
+    /* This styles the <figcaption> to look like the labels in your image */
     img-comparison-slider figcaption {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.8); /* Dark background */
         color: white;
-        padding: 6px 12px;
+        padding: 5px 10px;
         border-radius: 4px;
         position: absolute;
-        top: 15px;
-        font-size: 0.9rem;
-        pointer-events: none;
-        backdrop-filter: blur(4px);
+        top: 20px;
+        font-size: 0.85rem;
+        font-weight: 800; /* Bold text */
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-weight: bold;
+        pointer-events: none;
+        backdrop-filter: blur(2px);
+        line-height: 1;
     }
-    .before figcaption { left: 15px; }
-    .after figcaption { right: 15px; color: #00f2fe; }
+    
+    /* Left Badge (LR INPUT) */
+    .before figcaption { 
+        left: 20px; 
+        color: #fff;
+    }
+    
+    /* Right Badge (FRAMER) */
+    .after figcaption { 
+        right: 20px; 
+        color: #00f2fe; /* Cyan text for FRAMER */
+    }
 
     /* Layout Boxes */
     .tldr-box {
@@ -128,6 +154,9 @@
         padding: 25px; 
         border-radius: 16px;
         height: 100%; 
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
 
     /* Section Headers */
@@ -152,12 +181,19 @@
     /* Footer */
     .footer { background-color: #050505; padding: 4rem 1.5rem; }
     
-    /* [Modification] Icon Sizing */
     .project-icon {
         width: 120px; 
         height: auto;
         margin-bottom: 1rem;
         filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+    }
+    
+    .method-title {
+        color: var(--lab-light);
+        margin-bottom: 10px;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 10px;
     }
   </style>
 </head>
@@ -252,7 +288,7 @@
                     <img-comparison-slider class="slider-shadow">
                       <figure slot="first" class="before">
                         <img src="./images/tiger_lr.png" alt="LR Input">
-                        <figcaption>LR Input</figcaption>
+                        <figcaption>LR INPUT</figcaption>
                       </figure>
                       <figure slot="second" class="after">
                         <img src="./images/tiger_framer.png" alt="FRAMER_D">
@@ -275,7 +311,7 @@
                     <img-comparison-slider class="slider-shadow">
                       <figure slot="first" class="before">
                         <img src="./images/aurora_lr.png" alt="LR Input">
-                        <figcaption>LR Input</figcaption>
+                        <figcaption>LR INPUT</figcaption>
                       </figure>
                       <figure slot="second" class="after">
                         <img src="./images/aurora_framer.png" alt="FRAMER_U">
@@ -305,17 +341,17 @@
         <h2 class="title is-3 section-title">Abstract</h2>
         <div class="content has-text-justified is-size-5">
           <p>
-            Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. 
-            While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>.
+            [cite_start]Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations[cite: 24]. 
+            [cite_start]While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>[cite: 25].
           </p>
           <p>
             We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference. 
-            At each denoising step, the final-layer feature map teaches all intermediate layers. Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy.
+            At each denoising step, the final-layer feature map teaches all intermediate layers. [cite_start]Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy[cite: 27, 28].
           </p>
           <p>
-            For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure. For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives. 
-            Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity. 
-            Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ).
+            [cite_start]For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure[cite: 30]. [cite_start]For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives[cite: 31]. 
+            [cite_start]Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity[cite: 32]. 
+            [cite_start]Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ)[cite: 33].
           </p>
         </div>
       </div>
@@ -331,25 +367,25 @@
         <div class="column is-6">
             <img src="./images/figure_3.png" alt="Layer-wise Cosine Similarity" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
             <p class="is-size-7 has-text-centered" style="color: #888;">
-                Layer-wise cosine similarity of LF/HF features in diffusion models.
+                [cite_start]Layer-wise cosine similarity of LF/HF features in diffusion models[cite: 48].
             </p>
         </div>
         <div class="column is-6">
             <div class="content has-text-justified">
                 <h4 class="title is-4">The "Low-First, High-Later" Hierarchy</h4>
                 <p>
-                    We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>low-frequency (LF) bias</strong> stemming from two key observations:
+                    [cite_start]We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>low-frequency (LF) bias</strong> stemming from two key observations[cite: 45]:
                 </p>
                 <ul>
                     <li>
-                        <strong>Spectral Bias:</strong> Natural image frequency distributions are inherently LF-dominant. The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals.
+                        <strong>Spectral Bias:</strong> Natural image frequency distributions are inherently LF-dominant. [cite_start]The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals[cite: 46, 47].
                     </li>
                     <li>
-                        <strong>Depth-wise Hierarchy:</strong> As shown in the figure, an analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>.
+                        [cite_start]<strong>Depth-wise Hierarchy:</strong> As shown in the figure, an analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>[cite: 48].
                     </li>
                 </ul>
                 <p>
-                    A conventional, frequency-agnostic loss is fundamentally misaligned with this hierarchy. It supplies redundant gradients to early layers while starving the later, HF-refining layers. FRAMER addresses this by aligning distillation signals with this internal progression.
+                    A conventional, frequency-agnostic loss is fundamentally misaligned with this hierarchy. [cite_start]It supplies redundant gradients to early layers while starving the later, HF-refining layers[cite: 49]. FRAMER addresses this by aligning distillation signals with this internal progression.
                 </p>
             </div>
         </div>
@@ -367,31 +403,32 @@
       </div>
       <div class="content has-text-justified" style="margin-top: 25px;">
         <p class="is-size-5">
-           <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
+           <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. [cite_start]The key components are[cite: 159, 168]:
         </p>
+        
         <div class="columns is-multiline" style="margin-top: 10px;">
             <div class="column is-6">
                 <div class="glass-box">
-                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-search-minus"></i> IntraCL (LF)</h5>
-                    <p><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning.</p>
+                    <h5 class="title is-5 method-title">IntraCL (LF)</h5>
+                    <p><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. [cite_start]It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning[cite: 165, 169].</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
-                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-search-plus"></i> InterCL (HF)</h5>
-                    <p><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias.</p>
+                    <h5 class="title is-5 method-title">InterCL (HF)</h5>
+                    <p><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. [cite_start]It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias[cite: 166, 170].</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
-                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-balance-scale"></i> FAW</h5>
-                    <p><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias.</p>
+                    <h5 class="title is-5 method-title">FAW</h5>
+                    <p><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. [cite_start]It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias[cite: 171].</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
-                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-gate"></i> FAM</h5>
-                    <p><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse.</p>
+                    <h5 class="title is-5 method-title">FAM</h5>
+                    <p><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. [cite_start]It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse[cite: 172].</p>
                 </div>
             </div>
         </div>
@@ -409,8 +446,8 @@
             
             <div class="content has-text-justified" style="margin-top: 15px; color: #bbb;">
                 <p>
-                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate both fidelity metrics (PSNR, SSIM, LPIPS) and perceptual quality metrics (NIQE, MANIQA, MUSIQ).
-                    On the more challenging <strong>RealLR200</strong> and <strong>RealLQ250</strong> datasets, our method exhibits clear superiority, ranking first across all perceptual quality metrics. FRAMER consistently outperforms state-of-the-art methods like SeeSR and DiT4SR on both U-Net and DiT architectures.
+                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. [cite_start]We evaluate both fidelity metrics (PSNR, SSIM, LPIPS) and perceptual quality metrics (NIQE, MANIQA, MUSIQ)[cite: 277].
+                    On the more challenging <strong>RealLR200</strong> and <strong>RealLQ250</strong> datasets, our method exhibits clear superiority, ranking first across all perceptual quality metrics. [cite_start]FRAMER consistently outperforms state-of-the-art methods like SeeSR and DiT4SR on both U-Net and DiT architectures[cite: 282].
                 </p>
             </div>
         </div>
@@ -422,45 +459,33 @@
     <div class="container is-max-desktop">
         <h2 class="title is-3 has-text-centered section-title">Qualitative Comparisons</h2>
         <p class="subtitle has-text-centered">
-            Visual comparisons on RealSR (Ground Truth available) and RealLR200 (In-the-wild) datasets.
+            Detailed visual comparisons against state-of-the-art methods.
         </p>
         
-        <div class="columns is-multiline is-centered" style="margin-top: 20px;">
+        <div class="columns is-multiline is-centered" style="margin-top: 30px;">
             
-            <div class="column is-6">
+            <div class="column is-12 has-text-centered">
                 <div class="glass-box">
-                    <h5 class="title is-5 has-text-centered">Geometric Structure Restoration</h5>
-                    <img-comparison-slider class="slider-shadow">
-                        <figure slot="first" class="before">
-                            <img width="100%" src="./images/comp_traffic_lr.png" alt="LR">
-                            <figcaption>LR Input</figcaption>
-                        </figure>
-                        <figure slot="second" class="after">
-                            <img width="100%" src="./images/comp_traffic_out.png" alt="FRAMER">
-                            <figcaption>FRAMER</figcaption>
-                        </figure>
-                    </img-comparison-slider>
-                    <p class="is-size-7 has-text-centered mt-3">
-                        FRAMER effectively recovers sharp edges in geometric structures (e.g., Traffic Lights) where baselines often produce hallucinations or structural distortions.
+                    <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
+                        <span style="color: var(--lab-light);">Synthetic Degradation</span> (RealSR Dataset)
+                    </h4>
+                    <img src="./images/figure_10.png" alt="Figure 10: Comparisons on datasets with Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
+                        <strong>Figure 10.</strong> Qualitative comparisons on datasets with Ground Truth (RealSR, DrealSR). We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
+                        Red arrows indicate structural errors (e.g., hallucinations, object distortion), while Yellow arrows point to textural defects. [cite_start]FRAMER consistently mitigates these artifacts, producing sharper edges and faithful textures [cite: 672-675].
                     </p>
                 </div>
             </div>
 
-            <div class="column is-6">
+            <div class="column is-12 has-text-centered" style="margin-top: 40px;">
                 <div class="glass-box">
-                    <h5 class="title is-5 has-text-centered">Natural Texture Restoration</h5>
-                    <img-comparison-slider class="slider-shadow">
-                        <figure slot="first" class="before">
-                            <img width="100%" src="./images/comp_parrot_lr.png" alt="LR">
-                            <figcaption>LR Input</figcaption>
-                        </figure>
-                        <figure slot="second" class="after">
-                            <img width="100%" src="./images/comp_parrot_out.png" alt="FRAMER">
-                            <figcaption>FRAMER</figcaption>
-                        </figure>
-                    </img-comparison-slider>
-                    <p class="is-size-7 has-text-centered mt-3">
-                        Restoring intricate textures of feathers and skin in "in-the-wild" scenarios (RealLR200) that are often lost or over-smoothed by other methods.
+                    <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
+                        <span style="color: var(--lab-light);">Real-World "In-the-Wild"</span> (RealLR200 Dataset)
+                    </h4>
+                    <img src="./images/figure_11.png" alt="Figure 11: Comparisons on datasets without Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
+                        <strong>Figure 11.</strong> Qualitative comparisons on datasets without Ground Truth (RealLR200, RealLQ250). In these real-world scenarios with unknown degradations, baseline methods often suffer from severe degradations (red arrows indicate structural failures, yellow indicate textural anomalies). 
+                        [cite_start]FRAMER demonstrates superior perceptual quality by effectively balancing noise suppression with detail generation [cite: 710-712].
                     </p>
                 </div>
             </div>
@@ -476,7 +501,7 @@
   title={FRAMER: Frequency-Aligned Self-Distillation with Adaptive Modulation Leveraging Diffusion Priors for Real-World Image Super-Resolution},
   author={Choi, Seungho and Sung, Jeahun and Oh, Jihyong},
   journal={arXiv preprint arXiv:2412.xxxx},
-  year={2024}
+  year={2025}
 }</code></pre>
   </div>
 </section>
