@@ -341,17 +341,17 @@
         <h2 class="title is-3 section-title">Abstract</h2>
         <div class="content has-text-justified is-size-5">
           <p>
-            [cite_start]Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations[cite: 24]. 
-            [cite_start]While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>[cite: 25].
+            Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. 
+            While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>.
           </p>
           <p>
             We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference. 
-            At each denoising step, the final-layer feature map teaches all intermediate layers. [cite_start]Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy[cite: 27, 28].
+            At each denoising step, the final-layer feature map teaches all intermediate layers. Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy.
           </p>
           <p>
-            [cite_start]For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure[cite: 30]. [cite_start]For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives[cite: 31]. 
-            [cite_start]Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity[cite: 32]. 
-            [cite_start]Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ)[cite: 33].
+            For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure. For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives. 
+            Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity. 
+            Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ).
           </p>
         </div>
       </div>
@@ -367,25 +367,25 @@
         <div class="column is-6">
             <img src="./images/figure_3.png" alt="Layer-wise Cosine Similarity" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
             <p class="is-size-7 has-text-centered" style="color: #888;">
-                [cite_start]Layer-wise cosine similarity of LF/HF features in diffusion models[cite: 48].
+                Layer-wise cosine similarity of LF/HF features in diffusion models.
             </p>
         </div>
         <div class="column is-6">
             <div class="content has-text-justified">
                 <h4 class="title is-4">The "Low-First, High-Later" Hierarchy</h4>
                 <p>
-                    [cite_start]We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>low-frequency (LF) bias</strong> stemming from two key observations[cite: 45]:
+                    We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>low-frequency (LF) bias</strong> stemming from two key observations:
                 </p>
                 <ul>
                     <li>
-                        <strong>Spectral Bias:</strong> Natural image frequency distributions are inherently LF-dominant. [cite_start]The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals[cite: 46, 47].
+                        <strong>Spectral Bias:</strong> Natural image frequency distributions are inherently LF-dominant. The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals.
                     </li>
                     <li>
-                        [cite_start]<strong>Depth-wise Hierarchy:</strong> As shown in the figure, an analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>[cite: 48].
+                        <strong>Depth-wise Hierarchy:</strong> As shown in the figure, an analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>.
                     </li>
                 </ul>
                 <p>
-                    A conventional, frequency-agnostic loss is fundamentally misaligned with this hierarchy. [cite_start]It supplies redundant gradients to early layers while starving the later, HF-refining layers[cite: 49]. FRAMER addresses this by aligning distillation signals with this internal progression.
+                    A conventional, frequency-agnostic loss is fundamentally misaligned with this hierarchy. It supplies redundant gradients to early layers while starving the later, HF-refining layers. FRAMER addresses this by aligning distillation signals with this internal progression.
                 </p>
             </div>
         </div>
@@ -403,32 +403,32 @@
       </div>
       <div class="content has-text-justified" style="margin-top: 25px;">
         <p class="is-size-5">
-           <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. [cite_start]The key components are[cite: 159, 168]:
+           <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
         </p>
         
         <div class="columns is-multiline" style="margin-top: 10px;">
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">IntraCL (LF)</h5>
-                    <p><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. [cite_start]It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning[cite: 165, 169].</p>
+                    <p><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning.</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">InterCL (HF)</h5>
-                    <p><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. [cite_start]It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias[cite: 166, 170].</p>
+                    <p><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias.</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">FAW</h5>
-                    <p><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. [cite_start]It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias[cite: 171].</p>
+                    <p><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias.</p>
                 </div>
             </div>
             <div class="column is-6">
                 <div class="glass-box">
                     <h5 class="title is-5 method-title">FAM</h5>
-                    <p><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. [cite_start]It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse[cite: 172].</p>
+                    <p><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse.</p>
                 </div>
             </div>
         </div>
@@ -446,8 +446,8 @@
             
             <div class="content has-text-justified" style="margin-top: 15px; color: #bbb;">
                 <p>
-                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. [cite_start]We evaluate both fidelity metrics (PSNR, SSIM, LPIPS) and perceptual quality metrics (NIQE, MANIQA, MUSIQ)[cite: 277].
-                    On the more challenging <strong>RealLR200</strong> and <strong>RealLQ250</strong> datasets, our method exhibits clear superiority, ranking first across all perceptual quality metrics. [cite_start]FRAMER consistently outperforms state-of-the-art methods like SeeSR and DiT4SR on both U-Net and DiT architectures[cite: 282].
+                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate both fidelity metrics (PSNR, SSIM, LPIPS) and perceptual quality metrics (NIQE, MANIQA, MUSIQ).
+                    On the more challenging <strong>RealLR200</strong> and <strong>RealLQ250</strong> datasets, our method exhibits clear superiority, ranking first across all perceptual quality metrics. FRAMER consistently outperforms state-of-the-art methods like SeeSR and DiT4SR on both U-Net and DiT architectures.
                 </p>
             </div>
         </div>
@@ -472,7 +472,7 @@
                     <img src="./images/figure_10.png" alt="Figure 10: Comparisons on datasets with Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
                         <strong>Figure 10.</strong> Qualitative comparisons on datasets with Ground Truth (RealSR, DrealSR). We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
-                        Red arrows indicate structural errors (e.g., hallucinations, object distortion), while Yellow arrows point to textural defects. [cite_start]FRAMER consistently mitigates these artifacts, producing sharper edges and faithful textures [cite: 672-675].
+                        Red arrows indicate structural errors (e.g., hallucinations, object distortion), while Yellow arrows point to textural defects. FRAMER consistently mitigates these artifacts, producing sharper edges and faithful textures.
                     </p>
                 </div>
             </div>
@@ -485,7 +485,7 @@
                     <img src="./images/figure_11.png" alt="Figure 11: Comparisons on datasets without Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
                         <strong>Figure 11.</strong> Qualitative comparisons on datasets without Ground Truth (RealLR200, RealLQ250). In these real-world scenarios with unknown degradations, baseline methods often suffer from severe degradations (red arrows indicate structural failures, yellow indicate textural anomalies). 
-                        [cite_start]FRAMER demonstrates superior perceptual quality by effectively balancing noise suppression with detail generation [cite: 710-712].
+                        FRAMER demonstrates superior perceptual quality by effectively balancing noise suppression with detail generation.
                     </p>
                 </div>
             </div>
@@ -497,7 +497,7 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{choi2024framer,
+    <pre><code>@article{choi2025framer,
   title={FRAMER: Frequency-Aligned Self-Distillation with Adaptive Modulation Leveraging Diffusion Priors for Real-World Image Super-Resolution},
   author={Choi, Seungho and Sung, Jeahun and Oh, Jihyong},
   journal={arXiv preprint arXiv:2412.xxxx},
