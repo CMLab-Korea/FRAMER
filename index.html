@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="FRAMER: Frequency-Aligned Self-Distillation with Adaptive Modulation Leveraging Diffusion Priors for Real-World Image Super-Resolution">
-  <meta name="keywords" content="Super-Resolution, Diffusion Models, Computer Vision, Real-ISR">
+  <meta name="keywords" content="FRAMER, Super-Resolution, Diffusion Models, Computer Vision, Real-ISR, CVPR">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FRAMER: Real-World Image Super-Resolution</title>
 
@@ -21,7 +21,7 @@
     /* --- CMLab Identity & Dark Theme --- */
     :root {
         --lab-color: #0D207F;     /* CMLab Official Blue */
-        --lab-light: #4c6ef5;     /* Lighter Blue for text */
+        --lab-light: #4c6ef5;     /* Lighter Blue for text enhancement */
         --bg-color: #0f111a;      /* Deep Dark Background */
         --card-bg: #1a1c29;       /* Card Background */
         --text-color: #e0e0e0;
@@ -32,13 +32,20 @@
         background-color: var(--bg-color);
         color: var(--text-color);
         font-family: 'Google Sans', sans-serif;
+        line-height: 1.6;
     }
 
-    /* Typography */
+    /* Typography & Links */
     .title { color: #ffffff !important; }
     .subtitle { color: #b0b0b0 !important; }
     a { color: var(--lab-light); transition: color 0.3s ease; }
-    a:hover { color: #fff; }
+    a:hover { color: #fff; text-decoration: underline; }
+
+    /* [Modification] Strong Text Color -> Lab Color */
+    strong {
+        color: var(--lab-light);
+        font-weight: 700;
+    }
 
     /* Hip Animated Gradient Text */
     .gradient-text {
@@ -66,11 +73,12 @@
         transform: translateY(-3px);
     }
 
-    /* Comparison Slider Styling */
+    /* [Modification] Slider Styling - Bigger & Equal Sizing */
     img-comparison-slider {
         --divider-width: 2px;
         --divider-color: #00f2fe;
         --default-handle-opacity: 1;
+        width: 100%;
         border-radius: 12px;
         outline: none;
         transition: box-shadow 0.3s ease;
@@ -81,16 +89,22 @@
     .slider-shadow:hover {
         box-shadow: 0 30px 60px rgba(13, 32, 127, 0.4);
     }
+    
+    .slider-container img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
 
     /* Captions inside Slider */
     img-comparison-slider figcaption {
         background: rgba(0, 0, 0, 0.7);
         color: white;
-        padding: 4px 10px;
+        padding: 6px 12px;
         border-radius: 4px;
         position: absolute;
         top: 15px;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         pointer-events: none;
         backdrop-filter: blur(4px);
         text-transform: uppercase;
@@ -100,40 +114,51 @@
     .before figcaption { left: 15px; }
     .after figcaption { right: 15px; color: #00f2fe; }
 
-    /* Boxes & TL;DR */
+    /* Layout Boxes */
     .tldr-box {
         background: rgba(13, 32, 127, 0.15);
         border-left: 4px solid var(--lab-color);
-        padding: 1.5rem;
+        padding: 2rem;
         border-radius: 8px;
         margin-bottom: 3rem;
     }
     .glass-box {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 20px;
-        border-radius: 12px;
+        padding: 25px; 
+        border-radius: 16px;
+        height: 100%; 
     }
 
-    /* Tables */
-    .table-container table {
-        background-color: transparent;
-        color: #ddd;
-        width: 100%;
+    /* Section Headers */
+    .section-title {
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
     }
-    .table-container th {
-        background-color: var(--lab-color);
-        color: white;
-        border: none;
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 3px;
+        background: var(--lab-light);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
     }
-    .table-container td {
-        border-bottom: 1px solid #333;
-    }
-    .best-score { color: #00f2fe; font-weight: bold; }
-    .second-best { color: #4facfe; text-decoration: underline; }
 
     /* Footer */
-    .footer { background-color: #050505; padding: 3rem 1.5rem; }
+    .footer { background-color: #050505; padding: 4rem 1.5rem; }
+    
+    /* [Modification] Icon Sizing */
+    .project-icon {
+        width: 120px; 
+        height: auto;
+        margin-bottom: 1rem;
+        filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+    }
   </style>
 </head>
 <body>
@@ -144,18 +169,20 @@
       <div class="columns is-centered">
         <div class="column has-text-centered">
           
-          <div style="margin-bottom: 20px;">
-             <span class="icon is-large" style="font-size: 3.5rem; color: white;">
-                <i class="fas fa-layer-group"></i>
-             </span>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px;">
+             <img src="./static/images/framer_icon.svg" class="project-icon" alt="FRAMER Icon">
+             
+             <h1 class="title is-1 publication-title" style="margin-top: 0; line-height: 1;">
+                <span class="gradient-text" style="font-size: 4.5rem;">FRAMER</span>
+             </h1>
           </div>
 
-          <h1 class="title is-1 publication-title">
-            <span class="gradient-text">FRAMER</span><br>
-            <span class="is-size-3">Frequency-Aligned Self-Distillation with Adaptive Modulation<br>Leveraging Diffusion Priors for Real-World Image Super-Resolution</span>
-          </h1>
+          <h2 class="title is-3 publication-title">
+            Frequency-Aligned Self-Distillation with Adaptive Modulation<br>
+            Leveraging Diffusion Priors for Real-World Image Super-Resolution
+          </h2>
           
-          <div class="is-size-5 publication-authors">
+          <div class="is-size-5 publication-authors" style="margin-top: 25px;">
             <span class="author-block">
               <a href="mailto:choiseungho1019@gmail.com">Seungho Choi</a><sup>1</sup>,</span>
             <span class="author-block">
@@ -165,11 +192,11 @@
             </span>
           </div>
 
-          <div class="is-size-5 publication-authors" style="margin-top: 10px;">
+          <div class="is-size-5 publication-authors">
             <span class="author-block"><sup>1</sup>Chung-Ang University</span>
           </div>
-          <div style="margin-top: 8px;">
-             <span style="font-weight: bold; font-size: 1.1rem; color: #fff;">
+          <div style="margin-top: 10px;">
+             <span style="font-weight: bold; font-size: 1.2rem; color: #fff;">
                 Creative Vision and Multimedia Lab (CMLab)
              </span>
           </div>
@@ -193,8 +220,7 @@
               </span>
             </div>
           </div>
-        
-
+          
         </div>
       </div>
     </div>
@@ -206,33 +232,35 @@
     <div class="container is-max-desktop">
       
       <div class="tldr-box">
-          <h3 class="title is-5" style="color: var(--lab-light); margin-bottom: 0.5rem;">TL;DR</h3>
+          <h3 class="title is-4" style="color: var(--lab-light); margin-bottom: 0.5rem;">TL;DR</h3>
           <p class="is-size-5">
-              <strong>FRAMER</strong> unlocks the high-frequency potential of diffusion models for Real-World Super-Resolution. 
-              We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones.
+              <strong>FRAMER</strong> unlocks the high-frequency potential of diffusion models for Real-World Super-Resolution without altering inference. 
+              We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones by addressing the "low-first, high-later" frequency hierarchy.
           </p>
       </div>
 
-      <h2 class="title is-3 has-text-centered" style="margin-bottom: 40px;">Restoration Capability</h2>
+      <h2 class="title is-3 section-title">Restoration Capability</h2>
       
-      <div class="columns is-centered is-variable is-8">
+      <div class="columns is-centered is-variable is-6">
         
         <div class="column is-6 has-text-centered">
             <div class="glass-box">
                 <h3 class="title is-4" style="margin-bottom: 15px;">
                     <span class="gradient-text">FRAMER<sub>D</sub></span> <span class="is-size-6" style="color:#aaa">(DiT Backbone)</span>
                 </h3>
-                <img-comparison-slider class="slider-shadow">
-                  <figure slot="first" class="before">
-                    <img width="100%" src="./images/tiger_lr.png" alt="LR Input">
-                    <figcaption>LR Input</figcaption>
-                  </figure>
-                  <figure slot="second" class="after">
-                    <img width="100%" src="./images/tiger_framer.png" alt="FRAMER_D Result">
-                    <figcaption>FRAMER<sub>D</sub></figcaption>
-                  </figure>
-                </img-comparison-slider>
-                <p class="is-size-7 has-text-left" style="margin-top: 15px; color: #bbb;">
+                <div class="slider-container">
+                    <img-comparison-slider class="slider-shadow">
+                      <figure slot="first" class="before">
+                        <img src="./static/images/tiger_lr.png" alt="LR Input">
+                        <figcaption>LR Input</figcaption>
+                      </figure>
+                      <figure slot="second" class="after">
+                        <img src="./static/images/tiger_framer.png" alt="FRAMER_D">
+                        <figcaption>FRAMER<sub>D</sub></figcaption>
+                      </figure>
+                    </img-comparison-slider>
+                </div>
+                <p class="is-size-6 has-text-left" style="margin-top: 15px; color: #ccc;">
                     Restores intricate fur textures and fine details, overcoming the smoothing artifacts typical of diffusion models.
                 </p>
             </div>
@@ -243,25 +271,27 @@
                 <h3 class="title is-4" style="margin-bottom: 15px;">
                     <span class="gradient-text">FRAMER<sub>U</sub></span> <span class="is-size-6" style="color:#aaa">(U-Net Backbone)</span>
                 </h3>
-                <img-comparison-slider class="slider-shadow">
-                  <figure slot="first" class="before">
-                    <img width="100%" src="./images/aurora_lr.png" alt="LR Input">
-                    <figcaption>LR Input</figcaption>
-                  </figure>
-                  <figure slot="second" class="after">
-                    <img width="100%" src="./images/aurora_framer.png" alt="FRAMER_U Result">
-                    <figcaption>FRAMER<sub>U</sub></figcaption>
-                  </figure>
-                </img-comparison-slider>
-                <p class="is-size-7 has-text-left" style="margin-top: 15px; color: #bbb;">
+                <div class="slider-container">
+                    <img-comparison-slider class="slider-shadow">
+                      <figure slot="first" class="before">
+                        <img src="./static/images/aurora_lr.png" alt="LR Input">
+                        <figcaption>LR Input</figcaption>
+                      </figure>
+                      <figure slot="second" class="after">
+                        <img src="./static/images/aurora_framer.png" alt="FRAMER_U">
+                        <figcaption>FRAMER<sub>U</sub></figcaption>
+                      </figure>
+                    </img-comparison-slider>
+                </div>
+                <p class="is-size-6 has-text-left" style="margin-top: 15px; color: #ccc;">
                     Effectively sharpens natural landscapes and starry skies, demonstrating robust generalization on the U-Net architecture.
                 </p>
             </div>
         </div>
       </div>
       
-      <div class="content has-text-centered is-size-7" style="color: #666; margin-top: 20px;">
-        <i class="fas fa-arrows-alt-h"></i> Slide to compare <strong>Low-Resolution</strong> vs <strong>FRAMER</strong>.
+      <div class="content has-text-centered is-size-6" style="color: #666; margin-top: 20px;">
+        <i class="fas fa-arrows-alt-h"></i> Slide the handle to compare <strong>Low-Resolution Input</strong> vs <strong>FRAMER Restoration</strong>.
       </div>
 
     </div>
@@ -272,16 +302,20 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
+        <h2 class="title is-3 section-title">Abstract</h2>
+        <div class="content has-text-justified is-size-5">
           <p>
-            Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a low-frequency (LF) bias and a depth-wise "low-first, high-later" hierarchy.
+            Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. 
+            While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>.
           </p>
           <p>
-            We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference. At each denoising step, the final-layer feature map teaches all intermediate layers. Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy.
+            We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference. 
+            At each denoising step, the final-layer feature map teaches all intermediate layers. Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy.
           </p>
           <p>
-            For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure. For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives. Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity. Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ).
+            For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure. For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives. 
+            Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity. 
+            Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ).
           </p>
         </div>
       </div>
@@ -291,156 +325,143 @@
 
 <section class="section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Method Overview</h2>
-      <div class="columns is-centered">
-        <div class="column is-full-width has-text-centered">
-           <img src="./images/method.png" alt="FRAMER Framework" style="border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+      <h2 class="title is-3 has-text-centered section-title">Motivation & Analysis</h2>
+      
+      <div class="columns is-centered is-vcentered">
+        <div class="column is-6">
+            <img src="./static/images/figure_3.png" alt="Layer-wise Cosine Similarity" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
+            <p class="is-size-7 has-text-centered" style="color: #888;">
+                Layer-wise cosine similarity of LF/HF features in diffusion models.
+            </p>
+        </div>
+        <div class="column is-6">
+            <div class="content has-text-justified">
+                <h4 class="title is-4">The "Low-First, High-Later" Hierarchy</h4>
+                <p>
+                    We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>low-frequency (LF) bias</strong> stemming from two key observations:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Spectral Bias:</strong> Natural image frequency distributions are inherently LF-dominant. The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals.
+                    </li>
+                    <li>
+                        <strong>Depth-wise Hierarchy:</strong> As shown in the figure, an analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>.
+                    </li>
+                </ul>
+                <p>
+                    A conventional, frequency-agnostic loss is fundamentally misaligned with this hierarchy. It supplies redundant gradients to early layers while starving the later, HF-refining layers. FRAMER addresses this by aligning distillation signals with this internal progression.
+                </p>
+            </div>
         </div>
       </div>
-      <div class="content has-text-justified" style="margin-top: 20px;">
-          <p>
-              <strong>Figure 4.</strong> Overview of FRAMER. The framework is a training-only strategy that applies:
-          </p>
-          <ul>
-              <li><strong>Frequency Decomposition:</strong> Separates features into LF and HF bands using FFT.</li>
-              <li><strong>IntraCL (LF):</strong> Compares student features with the teacher within the same image to stabilize structure.</li>
-              <li><strong>InterCL (HF):</strong> Uses in-batch negatives to sharpen details and instance discrimination.</li>
-              <li><strong>FAW & FAM:</strong> Adaptively weights and gates the losses based on the "low-first, high-later" hierarchy.</li>
-          </ul>
-      </div>
     </div>
 </section>
 
 <section class="section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Quantitative Results</h2>
-      <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th rowspan="2" style="border-radius: 8px 0 0 0;">Dataset</th>
-                    <th rowspan="2">Method</th>
-                    <th colspan="3">Fidelity Metrics</th>
-                    <th colspan="3" style="border-radius: 0 8px 0 0;">Perceptual Metrics</th>
-                </tr>
-                <tr>
-                    <th>PSNR ↑</th>
-                    <th>SSIM ↑</th>
-                    <th>LPIPS ↓</th>
-                    <th>NIQE ↓</th>
-                    <th>MANIQA ↑</th>
-                    <th>MUSIQ ↑</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td rowspan="4" style="vertical-align: middle;"><strong>RealSR</strong><br></td>
-                    <td>SwinIR [cite: 24]</td>
-                    <td>23.56</td>
-                    <td>0.719</td>
-                    <td>0.378</td>
-                    <td>5.605</td>
-                    <td>0.359</td>
-                    <td>61.47</td>
-                </tr>
-                <tr>
-                    <td>SeeSR [cite: 48]</td>
-                    <td>23.69</td>
-                    <td>0.700</td>
-                    <td>0.386</td>
-                    <td>5.337</td>
-                    <td>0.542</td>
-                    <td>69.80</td>
-                </tr>
-                <tr>
-                    <td>PiSA-SR [cite: 39]</td>
-                    <td>24.00</td>
-                    <td>0.719</td>
-                    <td>0.355</td>
-                    <td>5.902</td>
-                    <td>0.412</td>
-                    <td>68.20</td>
-                </tr>
-                <tr style="background-color: rgba(13, 32, 127, 0.3);">
-                    <td><strong>FRAMER (Ours)</strong></td>
-                    <td class="best-score">24.81</td>
-                    <td class="best-score">0.746</td>
-                    <td class="best-score">0.328</td>
-                    <td class="best-score">5.513</td>
-                    <td class="best-score">0.484</td>
-                    <td class="best-score">70.15</td>
-                </tr>
-                
-                <tr><td colspan="8" style="height:10px; border:none;"></td></tr>
-
-                <tr>
-                    <td rowspan="3" style="vertical-align: middle;"><strong>RealLR200</strong><br>[cite: 48]</td>
-                    <td>SeeSR</td>
-                    <td>-</td><td>-</td><td>-</td>
-                    <td>3.693</td>
-                    <td>0.343</td>
-                    <td>64.59</td>
-                </tr>
-                <tr>
-                    <td>PiSA-SR</td>
-                    <td>-</td><td>-</td><td>-</td>
-                    <td>5.305</td>
-                    <td>0.361</td>
-                    <td>61.24</td>
-                </tr>
-                <tr style="background-color: rgba(13, 32, 127, 0.3);">
-                    <td><strong>FRAMER (Ours)</strong></td>
-                    <td>-</td><td>-</td><td>-</td>
-                    <td class="best-score">4.381</td>
-                    <td class="best-score">0.525</td>
-                    <td class="best-score">71.38</td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="is-size-7 has-text-centered" style="margin-top: 10px; color: #888;">
-            * Highlights indicate best performance. FRAMER achieves state-of-the-art perceptual quality on benchmarks.
+      <h2 class="title is-3 has-text-centered section-title">Method Overview</h2>
+      <div class="columns is-centered">
+        <div class="column is-full-width has-text-centered">
+           <img src="./static/images/method.png" alt="FRAMER Framework" style="border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+        </div>
+      </div>
+      <div class="content has-text-justified" style="margin-top: 25px;">
+        <p class="is-size-5">
+           <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
         </p>
+        <div class="columns is-multiline" style="margin-top: 10px;">
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-search-minus"></i> IntraCL (LF)</h5>
+                    <p><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-search-plus"></i> InterCL (HF)</h5>
+                    <p><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-balance-scale"></i> FAW</h5>
+                    <p><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5" style="color: var(--lab-light);"><i class="fas fa-gate"></i> FAM</h5>
+                    <p><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse.</p>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
 </section>
 
 <section class="section">
     <div class="container is-max-desktop">
-        <h2 class="title is-3 has-text-centered">More Visual Comparisons</h2>
+      <h2 class="title is-3 has-text-centered section-title">Quantitative Results</h2>
+      
+      <div class="columns is-centered">
+        <div class="column is-10 has-text-centered">
+            <img src="./static/images/table_1.png" alt="Table 1: Quantitative Comparison" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            
+            <div class="content has-text-justified" style="margin-top: 15px; color: #bbb;">
+                <p>
+                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate both fidelity metrics (PSNR, SSIM, LPIPS) and perceptual quality metrics (NIQE, MANIQA, MUSIQ).
+                    On the more challenging <strong>RealLR200</strong> and <strong>RealLQ250</strong> datasets, our method exhibits clear superiority, ranking first across all perceptual quality metrics. FRAMER consistently outperforms state-of-the-art methods like SeeSR and DiT4SR on both U-Net and DiT architectures.
+                </p>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered section-title">Qualitative Comparisons</h2>
+        <p class="subtitle has-text-centered">
+            Visual comparisons on RealSR (Ground Truth available) and RealLR200 (In-the-wild) datasets.
+        </p>
         
-        <div class="columns is-multiline is-centered">
+        <div class="columns is-multiline is-centered" style="margin-top: 20px;">
             
             <div class="column is-6">
                 <div class="glass-box">
-                    <h5 class="title is-5 has-text-centered">Structure Restoration</h5>
+                    <h5 class="title is-5 has-text-centered">Geometric Structure Restoration</h5>
                     <img-comparison-slider class="slider-shadow">
                         <figure slot="first" class="before">
-                            <img width="100%" src="./images/comp_traffic_lr.png" alt="LR">
+                            <img width="100%" src="./static/images/comp_traffic_lr.png" alt="LR">
                             <figcaption>LR Input</figcaption>
                         </figure>
                         <figure slot="second" class="after">
-                            <img width="100%" src="./images/comp_traffic_out.png" alt="FRAMER">
+                            <img width="100%" src="./static/images/comp_traffic_out.png" alt="FRAMER">
                             <figcaption>FRAMER</figcaption>
                         </figure>
                     </img-comparison-slider>
-                    <p class="is-size-7 has-text-centered mt-2">Recovering sharp geometric structures (e.g., Traffic Lights).</p>
+                    <p class="is-size-7 has-text-centered mt-3">
+                        FRAMER effectively recovers sharp edges in geometric structures (e.g., Traffic Lights) where baselines often produce hallucinations or structural distortions.
+                    </p>
                 </div>
             </div>
 
             <div class="column is-6">
                 <div class="glass-box">
-                    <h5 class="title is-5 has-text-centered">Texture Restoration</h5>
+                    <h5 class="title is-5 has-text-centered">Natural Texture Restoration</h5>
                     <img-comparison-slider class="slider-shadow">
                         <figure slot="first" class="before">
-                            <img width="100%" src="./images/comp_parrot_lr.png" alt="LR">
+                            <img width="100%" src="./static/images/comp_parrot_lr.png" alt="LR">
                             <figcaption>LR Input</figcaption>
                         </figure>
                         <figure slot="second" class="after">
-                            <img width="100%" src="./images/comp_parrot_out.png" alt="FRAMER">
+                            <img width="100%" src="./static/images/comp_parrot_out.png" alt="FRAMER">
                             <figcaption>FRAMER</figcaption>
                         </figure>
                     </img-comparison-slider>
-                    <p class="is-size-7 has-text-centered mt-2">Restoring natural details in the wild (e.g., Feathers).</p>
+                    <p class="is-size-7 has-text-centered mt-3">
+                        Restoring intricate textures of feathers and skin in "in-the-wild" scenarios (RealLR200) that are often lost or over-smoothed by other methods.
+                    </p>
                 </div>
             </div>
 
