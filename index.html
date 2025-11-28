@@ -355,29 +355,43 @@
       <h2 class="title is-3 has-text-centered section-title">Motivation & Analysis</h2>
       
       <div class="columns is-centered is-vcentered">
-        <div class="column is-6">
-            <img src="./images/figure_3.png" alt="Layer-wise Cosine Similarity" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
-            <p class="is-size-7 has-text-centered" style="color: #888;">
-                Layer-wise cosine similarity of LF/HF features in diffusion models.
-            </p>
+<div class="column is-6">
+            <div style="margin-bottom: 2rem;">
+                <img src="./static/images/figure_2.png" alt="Figure 2: Spectral Bias" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
+                <p class="is-size-7 has-text-centered" style="color: #aaa; margin-top: 5px;">
+                    <strong>Figure 2.</strong> Band-wise magnitude densities showing the inherent LF dominance (bias) in natural images.
+                </p>
+            </div>
+
+            <div>
+                <img src="./static/images/figure_3.png" alt="Figure 3: Layer-wise Cosine Similarity" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
+                <p class="is-size-7 has-text-centered" style="color: #aaa; margin-top: 5px;">
+                    <strong>Figure 3.</strong> Layer-wise cosine similarity revealing the "low-first, high-later" frequency hierarchy.
+                </p>
+            </div>
         </div>
+
         <div class="column is-6">
             <div class="content has-text-justified">
-                <h4 class="title is-4">The "Low-First, High-Later" Hierarchy</h4>
+                <h4 class="title is-4">Why Do Diffusion Models Struggle?</h4>
                 <p>
-                    We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>low-frequency (LF) bias</strong> stemming from two key observations:
+                    We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>Low-Frequency (LF) Bias</strong> stemming from two key observations:
                 </p>
-                <ul>
-                    <li>
-                        <strong>Spectral Bias:</strong> Natural image frequency distributions are inherently LF-dominant. The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals.
-                    </li>
-                    <li>
-                        <strong>Depth-wise Hierarchy:</strong> As shown in the figure, an analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>.
-                    </li>
-                </ul>
-                <p>
-                    A conventional, frequency-agnostic loss is fundamentally misaligned with this hierarchy. It supplies redundant gradients to early layers while starving the later, HF-refining layers. FRAMER addresses this by aligning distillation signals with this internal progression.
-                </p>
+                
+                <div class="glass-box" style="padding: 15px; margin-bottom: 15px;">
+                    <h6 class="title is-6" style="color: var(--lab-light); margin-bottom: 5px;">1. Spectral Bias (Figure 2)</h6>
+                    <p class="is-size-6" style="margin-bottom: 0;">
+                        Natural image frequency distributions are inherently LF-dominant. The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals.
+                    </p>
+                </div>
+
+                <div class="glass-box" style="padding: 15px;">
+                    <h6 class="title is-6" style="color: var(--lab-light); margin-bottom: 5px;">2. Depth-wise Hierarchy (Figure 3)</h6>
+                    <p class="is-size-6" style="margin-bottom: 0;">
+                        An analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>. A conventional loss supplies redundant gradients to early layers while starving the later, HF-refining layers.
+                    </p>
+                </div>
+
             </div>
         </div>
       </div>
