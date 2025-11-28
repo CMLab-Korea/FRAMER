@@ -72,27 +72,25 @@
         transform: translateY(-3px);
     }
 
-    /* --- [CORE FIX] Slider Styling to match Screenshot --- */
+    /* --- [CORE FIX] Slider Styling --- */
     .slider-container {
         width: 100%;
-        /* Force Square Aspect Ratio (1:1) */
         aspect-ratio: 1 / 1; 
         overflow: hidden;
         border-radius: 12px;
         position: relative;
-        background: #000; /* Loading placeholder color */
+        background: #000; 
     }
     
     img-comparison-slider {
         --divider-width: 2px;
-        --divider-color: #00f2fe; /* Cyan divider */
+        --divider-color: #00f2fe; 
         --default-handle-opacity: 1;
         width: 100%;
         height: 100%; 
         outline: none;
     }
 
-    /* Ensure images cover the square area perfectly without distortion */
     img-comparison-slider img {
         width: 100%;
         height: 100%;
@@ -101,7 +99,6 @@
         display: block;
     }
 
-    /* Shadow effect for the slider box */
     .slider-shadow {
         box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         transition: box-shadow 0.3s ease;
@@ -110,35 +107,24 @@
         box-shadow: 0 30px 60px rgba(13, 32, 127, 0.4);
     }
 
-    /* --- Badge Styling (LR INPUT / FRAMER) --- */
-    /* This styles the <figcaption> to look like the labels in your image */
+    /* Badge Styling */
     img-comparison-slider figcaption {
-        background: rgba(0, 0, 0, 0.8); /* Dark background */
+        background: rgba(0, 0, 0, 0.8);
         color: white;
         padding: 5px 10px;
         border-radius: 4px;
         position: absolute;
         top: 20px;
         font-size: 0.85rem;
-        font-weight: 800; /* Bold text */
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         pointer-events: none;
         backdrop-filter: blur(2px);
         line-height: 1;
     }
-    
-    /* Left Badge (LR INPUT) */
-    .before figcaption { 
-        left: 20px; 
-        color: #fff;
-    }
-    
-    /* Right Badge (FRAMER) */
-    .after figcaption { 
-        right: 20px; 
-        color: #00f2fe; /* Cyan text for FRAMER */
-    }
+    .before figcaption { left: 20px; color: #fff; }
+    .after figcaption { right: 20px; color: #00f2fe; }
 
     /* Layout Boxes */
     .tldr-box {
@@ -194,6 +180,11 @@
         font-weight: 700;
         border-bottom: 1px solid rgba(255,255,255,0.1);
         padding-bottom: 10px;
+    }
+
+    /* [Modification] All PNGs get a white background to fix visibility of transparent diagrams */
+    img[src$=".png"] {
+        background-color: white;
     }
   </style>
 </head>
