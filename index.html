@@ -437,8 +437,8 @@
             
             <div class="content has-text-justified" style="margin-top: 15px; color: #bbb;">
                 <p>
-                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate both fidelity metrics (PSNR, SSIM, LPIPS) and perceptual quality metrics (NIQE, MANIQA, MUSIQ).
-                    On the more challenging <strong>RealLR200</strong> and <strong>RealLQ250</strong> datasets, our method exhibits clear superiority, ranking first across all perceptual quality metrics. FRAMER consistently outperforms state-of-the-art methods like SeeSR and DiT4SR on both U-Net and DiT architectures.
+                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate fidelity metrics (PSNR, SSIM, LPIPS) as well as perceptual quality metrics (NIQE, MANIQA, MUSIQ) across multiple datasets, including <strong>DrealSR</strong>, <strong>RealSR</strong>, <strong>RealLR200</strong>, and <strong>RealLQ250</strong>. Overall, our method demonstrates competitive and generally superior performance across perceptual quality metrics.
+  
                 </p>
             </div>
         </div>
@@ -458,11 +458,11 @@
             <div class="column is-12 has-text-centered">
                 <div class="glass-box">
                     <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
-                        <span style="color: var(--lab-light);">Synthetic Degradation</span> (RealSR Dataset)
+                        <span style="color: var(--lab-light);">Synthetic Degradation</span> (DrealSR, RealSR Dataset)
                     </h4>
                     <img src="./images/figure_10.png" alt="Figure 10: Comparisons on datasets with Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
-                        <strong>Figure 10.</strong> Qualitative comparisons on datasets with Ground Truth (RealSR, DrealSR). We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
+                        <strong>Figure 10.</strong> Qualitative comparisons on datasets with Ground Truth (DrealSR, RealSR). We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
                         Red arrows indicate structural errors (e.g., hallucinations, object distortion), while Yellow arrows point to textural defects. FRAMER consistently mitigates these artifacts, producing sharper edges and faithful textures.
                     </p>
                 </div>
@@ -471,7 +471,7 @@
             <div class="column is-12 has-text-centered" style="margin-top: 40px;">
                 <div class="glass-box">
                     <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
-                        <span style="color: var(--lab-light);">Real-World "In-the-Wild"</span> (RealLR200 Dataset)
+                        <span style="color: var(--lab-light);">Real-World "In-the-Wild"</span> (RealLR200, RealLQ250 Dataset)
                     </h4>
                     <img src="./images/figure_11.png" alt="Figure 11: Comparisons on datasets without Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
