@@ -74,15 +74,15 @@
         transform: translateY(-3px);
     }
 
-    /* --- [CORE FIX] Slider Styling with Zoom --- */
+    /* --- [CORE FIX] Slider Styling with Wheel Zoom --- */
     .slider-container {
         width: 100%;
         aspect-ratio: 1 / 1; 
-        overflow: hidden; /* 확대 시 이미지가 밖으로 나가지 않게 함 */
+        overflow: hidden; 
         border-radius: 12px;
         position: relative;
         background: #000; 
-        cursor: crosshair; /* 줌 가능 커서 표시 */
+        cursor: zoom-in; /* 줌 가능 커서 표시 */
     }
     
     /* 줌 애니메이션을 위한 래퍼 클래스 */
@@ -90,14 +90,12 @@
         width: 100%;
         height: 100%;
         transform-origin: center center;
-        transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        /* 휠 줌은 부드러운 반응을 위해 0.2s 정도의 빠른 트랜지션 사용 */
+        transition: transform 0.2s ease-out; 
         will-change: transform, transform-origin;
     }
 
-    /* 마우스 오버 시 2.5배 확대 */
-    .slider-container:hover .zoom-target {
-        transform: scale(2.5); 
-    }
+    /* 기존 :hover 시 강제 확대 CSS 제거됨 */
     
     img-comparison-slider {
         --divider-width: 2px;
@@ -350,7 +348,7 @@
       </div>
       
       <div class="content has-text-centered is-size-6" style="color: #666; margin-top: 20px;">
-        <i class="fas fa-search-plus"></i> Hover to <strong>Zoom</strong>, <i class="fas fa-arrows-alt-h"></i> Slide to compare.
+        <i class="fas fa-search-plus"></i> Use <strong>Mouse Wheel</strong> to Zoom, <i class="fas fa-arrows-alt-h"></i> Slide to compare.
       </div>
 
     </div>
@@ -571,25 +569,54 @@
 
     containers.forEach(container => {
       const target = container.querySelector('.zoom-target');
+      let scale = 1;
+      const MIN_SCALE = 1;
+      const MAX_SCALE = 5;
+      const ZOOM_SPEED = 0.5; // Controls how fast the zoom happens per wheel tick
 
+      // 1. Wheel Event Listener
+      container.addEventListener('wheel', (e) => {
+        // Prevent default scroll behavior of the page
+        e.preventDefault();
+
+        // Check wheel direction: negative is up (zoom in), positive is down (zoom out)
+        const direction = e.deltaY > 0 ? -1 : 1;
+        
+        // Calculate new scale
+        const newScale = scale + (direction * ZOOM_SPEED);
+        
+        // Clamp scale value
+        scale = Math.min(Math.max(newScale, MIN_SCALE), MAX_SCALE);
+
+        // Apply scale
+        target.style.transform = `scale(${scale})`;
+        
+        // Change cursor to indicate zooming out is possible if zoomed in
+        container.style.cursor = scale > 1 ? 'move' : 'zoom-in';
+        
+      }, { passive: false }); // Important: 'passive: false' allows preventDefault()
+
+      // 2. Mouse Move Listener (For Panning)
       container.addEventListener('mousemove', (e) => {
-        // Calculate container dimensions and mouse position
         const rect = container.getBoundingClientRect();
         
-        // Calculate Mouse X/Y as percentage (0-100)
+        // Calculate percentage position
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-        // Set transform origin to mouse position for "lens" effect
+        // Update transform origin to follow mouse
         target.style.transformOrigin = `${x}% ${y}%`;
       });
 
-      // Optional: Reset to center when mouse leaves for cleaner re-entry
+      // 3. Mouse Leave Listener (Reset)
       container.addEventListener('mouseleave', () => {
-        // Using timeout to match the CSS transition duration prevents jumpiness
+        scale = 1;
+        target.style.transform = `scale(1)`;
+        container.style.cursor = 'zoom-in';
+        
         setTimeout(() => {
             target.style.transformOrigin = 'center center';
-        }, 250); 
+        }, 200); 
       });
     });
   });
