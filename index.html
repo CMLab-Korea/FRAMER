@@ -70,7 +70,7 @@
         transform: translateY(-3px);
     }
 
-    /* --- Slider & Zoom Styling --- */
+    /* --- [CORE FIX] Slider & Zoom Styling --- */
     .slider-container {
         width: 100%;
         aspect-ratio: 1 / 1; 
@@ -81,8 +81,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        /* 커서 기본값 */
-        cursor: default;
     }
 
     /* Panzoom이 적용될 요소 */
@@ -92,6 +90,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        /* 기본 상태에서는 마우스 이벤트를 자식(슬라이더)에게 양보 */
+        transform-origin: center center; 
     }
 
     .panzoom-element img-comparison-slider {
@@ -99,7 +99,9 @@
         height: 100%;
         max-width: none;
         max-height: none;
-        transition: opacity 0.2s ease;
+        /* 중요: 기본적으로 슬라이더가 마우스 이벤트를 받아야 함 */
+        pointer-events: auto;
+        cursor: col-resize; /* 슬라이더 커서 */
     }
     
     img-comparison-slider {
@@ -119,17 +121,16 @@
         -webkit-user-drag: none;
     }
 
-    /* [중요] Shift 키를 누르면 슬라이더의 이벤트를 끕니다 */
-    .pointer-events-none {
-        pointer-events: none !important;
-    }
-
-    /* Shift 키를 누르면 커서 변경 */
-    .grab-cursor {
+    /* Shift 키가 눌렸을 때 적용될 클래스 */
+    .panzoom-active .panzoom-element {
         cursor: grab !important;
     }
-    .grabbing-cursor {
+    .panzoom-active .panzoom-element:active {
         cursor: grabbing !important;
+    }
+    /* Shift 키가 눌리면 슬라이더는 이벤트를 무시하고, 뒤쪽의 Panzoom 컨테이너가 이벤트를 받음 */
+    .panzoom-active img-comparison-slider {
+        pointer-events: none !important;
     }
 
     .slider-shadow {
@@ -159,6 +160,7 @@
     .before figcaption { left: 20px; color: #fff; }
     .after figcaption { right: 20px; color: #00f2fe; }
 
+    /* Layout Boxes */
     .tldr-box {
         background: rgba(13, 32, 127, 0.15);
         border-left: 4px solid var(--lab-color);
@@ -216,7 +218,7 @@
         background-color: white;
     }
     
-    /* 사용법 안내 배지 */
+    /* 사용 안내 배지 스타일 */
     .instruction-badge {
         display: inline-block;
         background: rgba(255,255,255,0.1);
@@ -234,6 +236,7 @@
         background: #222;
         color: #fff;
         font-family: monospace;
+        font-weight: bold;
     }
   </style>
 </head>
@@ -336,7 +339,7 @@
                     <span class="gradient-text">FRAMER<sub>D</sub></span> <span class="is-size-6" style="color:#aaa">(DiT Backbone)</span>
                 </h3>
                 
-                <div class="slider-container" id="slider-container-1">
+                <div class="slider-container" id="slider-1">
                     <div class="panzoom-element">
                         <img-comparison-slider class="slider-shadow">
                           <figure slot="first" class="before">
@@ -367,7 +370,7 @@
                     <span class="gradient-text">FRAMER<sub>U</sub></span> <span class="is-size-6" style="color:#aaa">(U-Net Backbone)</span>
                 </h3>
                 
-                <div class="slider-container" id="slider-container-2">
+                <div class="slider-container" id="slider-2">
                     <div class="panzoom-element">
                         <img-comparison-slider class="slider-shadow">
                           <figure slot="first" class="before">
@@ -403,11 +406,172 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3 section-title">Abstract</h2>
         <div class="content has-text-justified is-size-5">
-           <p>We introduce FRAMER...</p>
+           <p>
+            Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. 
+            While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>.
+          </p>
+          <p>
+            We introduce <strong>FRAMER</strong>, a plug-and-play training scheme that exploits diffusion priors without changing the backbone or inference. 
+            At each denoising step, the final-layer feature map teaches all intermediate layers. Teacher and student feature maps are decomposed into LF/HF bands via FFT masks to align supervision with the model's internal frequency hierarchy.
+          </p>
+          <p>
+            For LF, an <strong>Intra Contrastive Loss (IntraCL)</strong> stabilizes globally shared structure. For HF, an <strong>Inter Contrastive Loss (InterCL)</strong> sharpens instance-specific details using random-layer and in-batch negatives. 
+            Two adaptive modulators, <strong>Frequency-based Adaptive Weight (FAW)</strong> and <strong>Frequency-based Alignment Modulation (FAM)</strong>, reweight per-layer LF/HF signals and gate distillation by current similarity. 
+            Across U-Net and DiT backbones, FRAMER consistently improves PSNR/SSIM and perceptual metrics (LPIPS, NIQE, MANIQA, MUSIQ).
+          </p>
         </div>
       </div>
     </div>
   </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered section-title">Motivation & Analysis</h2>
+      
+      <div class="columns is-centered is-vcentered">
+<div class="column is-6">
+            <div style="margin-bottom: 2rem;">
+                <img src="./images/figure_2.png" alt="Figure 2: Spectral Bias" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
+                <p class="is-size-7 has-text-centered" style="color: #aaa; margin-top: 5px;">
+                    <strong>Figure 2.</strong> Band-wise magnitude densities showing the inherent LF dominance (bias) in natural images.
+                </p>
+            </div>
+
+            <div>
+                <img src="./images/figure_3.png" alt="Figure 3: Layer-wise Cosine Similarity" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
+                <p class="is-size-7 has-text-centered" style="color: #aaa; margin-top: 5px;">
+                    <strong>Figure 3.</strong> Layer-wise cosine similarity revealing the "low-first, high-later" frequency hierarchy.
+                </p>
+            </div>
+        </div>
+
+        <div class="column is-6">
+            <div class="content has-text-justified">
+                <h4 class="title is-4">Why Do Diffusion Models Struggle?</h4>
+                <p>
+                    We trace the limitations of current diffusion models in Real-ISR to a fundamental <strong>Low-Frequency (LF) Bias</strong> stemming from two key observations:
+                </p>
+                
+                <div class="glass-box" style="padding: 15px; margin-bottom: 15px;">
+                    <h6 class="title is-6" style="color: var(--lab-light); margin-bottom: 5px;">1. Spectral Bias (Figure 2)</h6>
+                    <p class="is-size-6" style="margin-bottom: 0;">
+                        Natural image frequency distributions are <strong>inherently LF-dominant</strong>. The standard noise-prediction loss thus favors these dominant LF components, inevitably undertraining HF signals.
+                    </p>
+                </div>
+
+                <div class="glass-box" style="padding: 15px;">
+                    <h6 class="title is-6" style="color: var(--lab-light); margin-bottom: 5px;">2. Depth-wise Hierarchy (Figure 3)</h6>
+                    <p class="is-size-6" style="margin-bottom: 0;">
+                        An analysis of layer-wise feature maps reveals that LF features stabilize early in the network, while <strong>HF features converge only near the final layers</strong>. A conventional loss supplies redundant gradients to early layers while starving the later, HF-refining layers.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+  
+<section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered section-title">Method Overview</h2>
+      <div class="columns is-centered">
+        <div class="column is-full-width has-text-centered">
+           <img src="./images/method.png" alt="FRAMER Framework" style="border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+        </div>
+      </div>
+      <div class="content has-text-left" style="margin-top: 25px;">
+        <p class="is-size-5 has-text-justified">
+            <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
+        </p>
+        
+        <div class="columns is-multiline" style="margin-top: 10px;">
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5 method-title">IntraCL (LF)</h5>
+                    <p class="has-text-left"><strong>Intra Contrastive Loss</strong> stabilizes globally shared structures. It compares a student only against its teacher and a randomly sampled layer within the same network (no in-batch negatives), preventing false negatives common in batch-based contrastive learning.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5 method-title">InterCL (HF)</h5>
+                    <p class="has-text-left"><strong>Inter Contrastive Loss</strong> sharpens instance-specific details. It targets HF bands using both random-layer negatives (for layer progression) and in-batch negatives (for instance discrimination), counteracting the LF bias.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5 method-title">FAW</h5>
+                    <p class="has-text-left"><strong>Frequency-based Adaptive Weight</strong> decomposes self-distillation across depth and frequency. It reweights supervision based on the actual layer-wise change rate relative to the final layer, mitigating scale-induced spectral bias.</p>
+                </div>
+            </div>
+            <div class="column is-6">
+                <div class="glass-box">
+                    <h5 class="title is-5 method-title">FAM</h5>
+                    <p class="has-text-left"><strong>Frequency-based Alignment Modulation</strong> gates the distillation strength based on student-teacher alignment. It suppresses large, unstable gradients in early layers when alignment is low, preventing early training collapse.</p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+  
+<section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered section-title">Quantitative Results</h2>
+      
+      <div class="columns is-centered">
+        <div class="column is-10 has-text-centered">
+            <img src="./images/table_1.png" alt="Table 1: Quantitative Comparison" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            
+            <div class="content has-text-justified" style="margin-top: 15px; color: #bbb;">
+                <p>
+                    <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate fidelity metrics (PSNR, SSIM, LPIPS) as well as perceptual quality metrics (NIQE, MANIQA, MUSIQ) across multiple datasets, including <strong>DrealSR</strong>, <strong>RealSR</strong>, <strong>RealLR200</strong>, and <strong>RealLQ250</strong>. Overall, our method demonstrates competitive and generally superior performance across perceptual quality metrics.
+  
+                </p>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered section-title">Qualitative Comparisons</h2>
+        <p class="subtitle has-text-centered">
+            Detailed visual comparisons against state-of-the-art methods.
+        </p>
+        
+        <div class="columns is-multiline is-centered" style="margin-top: 30px;">
+            
+            <div class="column is-12 has-text-centered">
+                <div class="glass-box">
+                    <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
+                        <span style="color: var(--lab-light);">Synthetic Degradation</span> (DrealSR, RealSR Dataset)
+                    </h4>
+                    <img src="./images/figure_10.png" alt="Figure 10: Comparisons on datasets with Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
+                        <strong>Figure 10.</strong> Qualitative comparisons on datasets with Ground Truth (DrealSR, RealSR). We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
+                        Red arrows indicate structural errors (e.g., hallucinations, object distortion), while Yellow arrows point to textural defects. FRAMER consistently mitigates these artifacts, producing sharper edges and faithful textures.
+                    </p>
+                </div>
+            </div>
+
+            <div class="column is-12 has-text-centered" style="margin-top: 40px;">
+                <div class="glass-box">
+                    <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
+                        <span style="color: var(--lab-light);">Real-World "In-the-Wild"</span> (RealLR200, RealLQ250 Dataset)
+                    </h4>
+                    <img src="./images/figure_11.png" alt="Figure 11: Comparisons on datasets without Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
+                        <strong>Figure 11.</strong> Qualitative comparisons on datasets without Ground Truth (RealLR200, RealLQ250). In these real-world scenarios with unknown degradations, baseline methods often suffer from severe degradations (red arrows indicate structural failures, yellow indicate textural anomalies). 
+                        FRAMER demonstrates superior perceptual quality by effectively balancing noise suppression with detail generation.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </section>
 
 <section class="section" id="BibTeX">
@@ -431,6 +595,13 @@
       <p class="is-size-7" style="color: #666;">
         Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
       </p>
+      
+      <div style="margin-top: 10px; color: #444;">
+          <span class="icon"><i class="fas fa-eye"></i></span> 
+          <span id="busuanzi_container_page_pv">
+            Page Views: <span id="busuanzi_value_page_pv" style="color: var(--lab-light);"></span>
+          </span>
+      </div>
     </div>
   </div>
 </footer>
@@ -438,54 +609,47 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
       const panzoomElements = document.querySelectorAll('.panzoom-element');
-      
-      // 모든 Panzoom 인스턴스를 저장할 배열
       const instances = [];
 
       panzoomElements.forEach(elem => {
-        // 부모 컨테이너 찾기
+        // 부모 컨테이너 (.slider-container)
         const container = elem.parentElement;
 
+        // Panzoom 초기화
         const panzoom = Panzoom(elem, {
           maxScale: 5,
           minScale: 1,
           startScale: 1,
           contain: 'outside',
           animate: true,
-          // 중요: 기본적으로 Pan(이동)을 비활성화 -> 슬라이더가 우선권을 가짐
-          disablePan: true, 
+          // 중요: 기본값으로 Pan(드래그 이동) 기능을 끕니다.
+          disablePan: true,
           cursor: 'default'
         });
         
-        // 휠 줌은 항상 활성화
+        // 휠 줌은 언제나 가능하게 설정
         container.addEventListener('wheel', panzoom.zoomWithWheel);
 
         instances.push({
             pz: panzoom,
-            container: container,
-            slider: elem.querySelector('img-comparison-slider')
+            container: container
         });
       });
 
       // --- Shift 키 이벤트 리스너 ---
-      // Shift를 누르면: Pan(이동) 활성화, 슬라이더 비활성화
-      // Shift를 떼면: Pan(이동) 비활성화, 슬라이더 활성화
+      // 1. Shift 누름: "팬 모드" 활성화 -> 슬라이더 클릭 무시(pointer-events: none), Panzoom 이동 켜기
+      // 2. Shift 뗌:   "슬라이더 모드" 복귀 -> 슬라이더 클릭 허용(auto), Panzoom 이동 끄기
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Shift') {
             instances.forEach(item => {
-                // 1. Panzoom 이동 활성화
+                // Panzoom 이동 활성화
                 item.pz.setOptions({ 
                     disablePan: false, 
                     cursor: 'grab' 
                 });
-                // 2. 슬라이더의 이벤트 차단 (pointer-events: none)
-                // 이렇게 하면 마우스 이벤트가 부모(Panzoom)로 통과됨
-                if(item.slider) {
-                    item.slider.classList.add('pointer-events-none');
-                }
-                // 3. 컨테이너 커서 변경
-                item.container.classList.add('grab-cursor');
+                // CSS 클래스 추가하여 슬라이더 pointer-events: none 처리
+                item.container.classList.add('panzoom-active');
             });
         }
       });
@@ -493,38 +657,19 @@
       document.addEventListener('keyup', (e) => {
         if (e.key === 'Shift') {
             instances.forEach(item => {
-                // 1. Panzoom 이동 비활성화
+                // Panzoom 이동 비활성화
                 item.pz.setOptions({ 
                     disablePan: true, 
                     cursor: 'default' 
                 });
-                // 2. 슬라이더 이벤트 복구
-                if(item.slider) {
-                    item.slider.classList.remove('pointer-events-none');
-                }
-                // 3. 커서 복구
-                item.container.classList.remove('grab-cursor');
-                item.container.classList.remove('grabbing-cursor');
+                // CSS 클래스 제거하여 슬라이더 pointer-events: auto 복구
+                item.container.classList.remove('panzoom-active');
+                
+                // 드래그 중이었다면 커서 모양 초기화
+                item.container.classList.remove('grabbing');
             });
         }
       });
-
-      // 드래그 중 커서 모양 변경 (UI 디테일)
-      document.addEventListener('mousedown', (e) => {
-          if (e.shiftKey) {
-             instances.forEach(item => {
-                 if (item.container.contains(e.target)) {
-                     item.container.classList.add('grabbing-cursor');
-                 }
-             });
-          }
-      });
-      document.addEventListener('mouseup', () => {
-          instances.forEach(item => {
-              item.container.classList.remove('grabbing-cursor');
-          });
-      });
-
     });
 </script>
 
