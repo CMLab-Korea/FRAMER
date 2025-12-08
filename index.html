@@ -17,8 +17,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"/>
 
-  <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
-
   <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
   <style>
@@ -37,15 +35,20 @@
         color: var(--text-color);
         font-family: 'Google Sans', sans-serif;
         line-height: 1.6;
-        overscroll-behavior: none; 
     }
 
+    /* Typography & Links */
     .title { color: #ffffff !important; }
     .subtitle { color: #b0b0b0 !important; }
     a { color: var(--lab-light); transition: color 0.3s ease; }
     a:hover { color: #fff; text-decoration: underline; }
-    strong { color: var(--lab-light); font-weight: 700; }
 
+    strong {
+        color: var(--lab-light);
+        font-weight: 700;
+    }
+
+    /* Gradient Text */
     .gradient-text {
         background: var(--accent-gradient);
         -webkit-background-clip: text;
@@ -56,6 +59,7 @@
     }
     @keyframes shine { to { background-position: 200% center; } }
 
+    /* Buttons */
     .button.is-dark-custom {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
@@ -70,44 +74,37 @@
         transform: translateY(-3px);
     }
 
-    /* --- [CORE FIX] Slider & Zoom Styling --- */
+    /* --- [CORE FIX] Slider Styling with Zoom --- */
     .slider-container {
         width: 100%;
         aspect-ratio: 1 / 1; 
-        overflow: hidden; 
+        overflow: hidden; /* 확대 시 이미지가 밖으로 나가지 않게 함 */
         border-radius: 12px;
         position: relative;
         background: #000; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        cursor: crosshair; /* 줌 가능 커서 표시 */
     }
-
-    /* Panzoom이 적용될 요소 */
-    .panzoom-element {
+    
+    /* 줌 애니메이션을 위한 래퍼 클래스 */
+    .zoom-target {
         width: 100%;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* 기본 상태에서는 마우스 이벤트를 자식(슬라이더)에게 양보 */
-        transform-origin: center center; 
+        transform-origin: center center;
+        transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform, transform-origin;
     }
 
-    .panzoom-element img-comparison-slider {
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        max-height: none;
-        /* 중요: 기본적으로 슬라이더가 마우스 이벤트를 받아야 함 */
-        pointer-events: auto;
-        cursor: col-resize; /* 슬라이더 커서 */
+    /* 마우스 오버 시 2.5배 확대 */
+    .slider-container:hover .zoom-target {
+        transform: scale(2.5); 
     }
     
     img-comparison-slider {
         --divider-width: 2px;
         --divider-color: #00f2fe; 
         --default-handle-opacity: 1;
+        width: 100%;
+        height: 100%; 
         outline: none;
     }
 
@@ -117,20 +114,6 @@
         object-fit: cover; 
         object-position: center;
         display: block;
-        user-select: none;
-        -webkit-user-drag: none;
-    }
-
-    /* Shift 키가 눌렸을 때 적용될 클래스 */
-    .panzoom-active .panzoom-element {
-        cursor: grab !important;
-    }
-    .panzoom-active .panzoom-element:active {
-        cursor: grabbing !important;
-    }
-    /* Shift 키가 눌리면 슬라이더는 이벤트를 무시하고, 뒤쪽의 Panzoom 컨테이너가 이벤트를 받음 */
-    .panzoom-active img-comparison-slider {
-        pointer-events: none !important;
     }
 
     .slider-shadow {
@@ -141,6 +124,7 @@
         box-shadow: 0 30px 60px rgba(13, 32, 127, 0.4);
     }
 
+    /* Badge Styling */
     img-comparison-slider figcaption {
         background: rgba(0, 0, 0, 0.8);
         color: white;
@@ -155,7 +139,6 @@
         pointer-events: none;
         backdrop-filter: blur(2px);
         line-height: 1;
-        z-index: 10;
     }
     .before figcaption { left: 20px; color: #fff; }
     .after figcaption { right: 20px; color: #00f2fe; }
@@ -179,6 +162,7 @@
         justify-content: flex-start;
     }
 
+    /* Section Headers */
     .section-title {
         margin-bottom: 2rem;
         text-align: center;
@@ -197,6 +181,7 @@
         transform: translateX(-50%);
     }
 
+    /* Footer */
     .footer { background-color: #050505; padding: 4rem 1.5rem; }
     
     .project-icon {
@@ -217,27 +202,6 @@
     img[src$=".png"] {
         background-color: white;
     }
-    
-    /* 사용 안내 배지 스타일 */
-    .instruction-badge {
-        display: inline-block;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 20px;
-        padding: 5px 15px;
-        font-size: 0.85rem;
-        margin-top: 10px;
-        color: var(--lab-light);
-    }
-    .instruction-key {
-        border: 1px solid #666;
-        border-radius: 4px;
-        padding: 0 4px;
-        background: #222;
-        color: #fff;
-        font-family: monospace;
-        font-weight: bold;
-    }
   </style>
 </head>
 <body>
@@ -247,7 +211,7 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          
+           
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px;">
              <img src="./images/icon.svg" class="project-icon" alt="FRAMER Icon">
              
@@ -289,7 +253,8 @@
                 Creative Vision and Multimedia Lab (CMLab)
              </span>
           </div>
-          
+
+           
           <div class="is-size-7" style="color: #888; margin-top: 5px;">
             <sup>†</sup>Corresponding Author
           </div>
@@ -310,7 +275,7 @@
               </span>
             </div>
           </div>
-          
+           
         </div>
       </div>
     </div>
@@ -325,7 +290,7 @@
           <h3 class="title is-4" style="color: var(--lab-light); margin-bottom: 0.5rem;">TL;DR</h3>
           <p class="is-size-5">
               <strong>FRAMER</strong> unlocks the high-frequency potential of diffusion models for Real-World Super-Resolution without altering inference. 
-              We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones.
+              We demonstrate superior performance across both <strong>DiT (FRAMER<sub>D</sub>)</strong> and <strong>U-Net (FRAMER<sub>U</sub>)</strong> backbones by addressing the "low-first, high-later" frequency hierarchy.
           </p>
       </div>
 
@@ -338,9 +303,8 @@
                 <h3 class="title is-4" style="margin-bottom: 15px;">
                     <span class="gradient-text">FRAMER<sub>D</sub></span> <span class="is-size-6" style="color:#aaa">(DiT Backbone)</span>
                 </h3>
-                
-                <div class="slider-container" id="slider-1">
-                    <div class="panzoom-element">
+                <div class="slider-container">
+                    <div class="zoom-target">
                         <img-comparison-slider class="slider-shadow">
                           <figure slot="first" class="before">
                             <img src="./images/tiger_lr.png" alt="LR Input">
@@ -353,11 +317,6 @@
                         </img-comparison-slider>
                     </div>
                 </div>
-                <div class="instruction-badge">
-                   <i class="fas fa-mouse"></i> Scroll to Zoom &nbsp;|&nbsp; 
-                   <span class="instruction-key">Shift</span> + Drag to Pan
-                </div>
-
                 <p class="is-size-6 has-text-left" style="margin-top: 15px; color: #ccc;">
                     Restores intricate fur textures and fine details, overcoming the smoothing artifacts typical of diffusion models.
                 </p>
@@ -369,9 +328,8 @@
                 <h3 class="title is-4" style="margin-bottom: 15px;">
                     <span class="gradient-text">FRAMER<sub>U</sub></span> <span class="is-size-6" style="color:#aaa">(U-Net Backbone)</span>
                 </h3>
-                
-                <div class="slider-container" id="slider-2">
-                    <div class="panzoom-element">
+                <div class="slider-container">
+                    <div class="zoom-target">
                         <img-comparison-slider class="slider-shadow">
                           <figure slot="first" class="before">
                             <img src="./images/aurora_lr.png" alt="LR Input">
@@ -384,11 +342,6 @@
                         </img-comparison-slider>
                     </div>
                 </div>
-                <div class="instruction-badge">
-                   <i class="fas fa-mouse"></i> Scroll to Zoom &nbsp;|&nbsp; 
-                   <span class="instruction-key">Shift</span> + Drag to Pan
-                </div>
-
                 <p class="is-size-6 has-text-left" style="margin-top: 15px; color: #ccc;">
                     Effectively sharpens natural landscapes and starry skies, demonstrating robust generalization on the U-Net architecture.
                 </p>
@@ -396,6 +349,10 @@
         </div>
       </div>
       
+      <div class="content has-text-centered is-size-6" style="color: #666; margin-top: 20px;">
+        <i class="fas fa-search-plus"></i> Hover to <strong>Zoom</strong>, <i class="fas fa-arrows-alt-h"></i> Slide to compare.
+      </div>
+
     </div>
   </div>
 </section>
@@ -406,7 +363,7 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3 section-title">Abstract</h2>
         <div class="content has-text-justified is-size-5">
-           <p>
+          <p>
             Real-image super-resolution (Real-ISR) seeks to recover HR images from LR inputs with mixed, unknown degradations. 
             While diffusion models surpass GANs in perceptual quality, they under-reconstruct high-frequency (HF) details due to a <strong>low-frequency (LF) bias</strong> and a depth-wise <strong>"low-first, high-later" hierarchy</strong>.
           </p>
@@ -430,7 +387,7 @@
       <h2 class="title is-3 has-text-centered section-title">Motivation & Analysis</h2>
       
       <div class="columns is-centered is-vcentered">
-<div class="column is-6">
+        <div class="column is-6">
             <div style="margin-bottom: 2rem;">
                 <img src="./images/figure_2.png" alt="Figure 2: Spectral Bias" style="border-radius: 8px; border: 1px solid #333; width: 100%;">
                 <p class="is-size-7 has-text-centered" style="color: #aaa; margin-top: 5px;">
@@ -483,7 +440,7 @@
       </div>
       <div class="content has-text-left" style="margin-top: 25px;">
         <p class="is-size-5 has-text-justified">
-            <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
+           <strong>Figure 4.</strong> Overview of FRAMER. The framework applies self-distillation from the final-layer teacher to intermediate student layers. We decompose teacher/student features into LF/HF bands via FFT masks. The key components are:
         </p>
         
         <div class="columns is-multiline" style="margin-top: 10px;">
@@ -592,7 +549,9 @@
         <div style="margin-bottom: 20px;">
             <h4 class="title is-5" style="color: white; letter-spacing: 2px;">CMLab</h4>
         </div>
+        
       <p class="is-size-7" style="color: #666;">
+        This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br>
         Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
       </p>
       
@@ -607,70 +566,33 @@
 </footer>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const panzoomElements = document.querySelectorAll('.panzoom-element');
-      const instances = [];
+  document.addEventListener("DOMContentLoaded", function() {
+    const containers = document.querySelectorAll('.slider-container');
 
-      panzoomElements.forEach(elem => {
-        // 부모 컨테이너 (.slider-container)
-        const container = elem.parentElement;
+    containers.forEach(container => {
+      const target = container.querySelector('.zoom-target');
 
-        // Panzoom 초기화
-        const panzoom = Panzoom(elem, {
-          maxScale: 5,
-          minScale: 1,
-          startScale: 1,
-          contain: 'outside',
-          animate: true,
-          // 중요: 기본값으로 Pan(드래그 이동) 기능을 끕니다.
-          disablePan: true,
-          cursor: 'default'
-        });
+      container.addEventListener('mousemove', (e) => {
+        // Calculate container dimensions and mouse position
+        const rect = container.getBoundingClientRect();
         
-        // 휠 줌은 언제나 가능하게 설정
-        container.addEventListener('wheel', panzoom.zoomWithWheel);
+        // Calculate Mouse X/Y as percentage (0-100)
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-        instances.push({
-            pz: panzoom,
-            container: container
-        });
+        // Set transform origin to mouse position for "lens" effect
+        target.style.transformOrigin = `${x}% ${y}%`;
       });
 
-      // --- Shift 키 이벤트 리스너 ---
-      // 1. Shift 누름: "팬 모드" 활성화 -> 슬라이더 클릭 무시(pointer-events: none), Panzoom 이동 켜기
-      // 2. Shift 뗌:   "슬라이더 모드" 복귀 -> 슬라이더 클릭 허용(auto), Panzoom 이동 끄기
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Shift') {
-            instances.forEach(item => {
-                // Panzoom 이동 활성화
-                item.pz.setOptions({ 
-                    disablePan: false, 
-                    cursor: 'grab' 
-                });
-                // CSS 클래스 추가하여 슬라이더 pointer-events: none 처리
-                item.container.classList.add('panzoom-active');
-            });
-        }
-      });
-
-      document.addEventListener('keyup', (e) => {
-        if (e.key === 'Shift') {
-            instances.forEach(item => {
-                // Panzoom 이동 비활성화
-                item.pz.setOptions({ 
-                    disablePan: true, 
-                    cursor: 'default' 
-                });
-                // CSS 클래스 제거하여 슬라이더 pointer-events: auto 복구
-                item.container.classList.remove('panzoom-active');
-                
-                // 드래그 중이었다면 커서 모양 초기화
-                item.container.classList.remove('grabbing');
-            });
-        }
+      // Optional: Reset to center when mouse leaves for cleaner re-entry
+      container.addEventListener('mouseleave', () => {
+        // Using timeout to match the CSS transition duration prevents jumpiness
+        setTimeout(() => {
+            target.style.transformOrigin = 'center center';
+        }, 250); 
       });
     });
+  });
 </script>
 
 </body>
