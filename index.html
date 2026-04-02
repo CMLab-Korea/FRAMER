@@ -209,7 +209,7 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-           
+            
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px;">
              <img src="./images/icon.svg" class="project-icon" alt="FRAMER Icon">
              
@@ -267,7 +267,7 @@
              </span>
           </div>
 
-           
+            
           <div class="is-size-7" style="color: #888; margin-top: 5px;">
             <sup>†</sup>Corresponding Author
           </div>
@@ -288,7 +288,7 @@
               </span>
             </div>
           </div>
-           
+            
         </div>
       </div>
     </div>
@@ -488,20 +488,45 @@
   
 <section class="section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered section-title">Quantitative Results</h2>
+      <h2 class="title is-3 has-text-centered section-title">Quantitative Results & Supplementary Analysis</h2>
       
       <div class="columns is-centered">
         <div class="column is-10 has-text-centered">
+            <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
+                <span style="color: var(--lab-light);">Main Quantitative Results</span>
+            </h4>
             <img src="./images/table_1.png" alt="Table 1: Quantitative Comparison" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             
             <div class="content has-text-justified" style="margin-top: 15px; color: #bbb;">
                 <p>
                     <strong>Table 1.</strong> Quantitative comparison of real-world image super-resolution methods. We evaluate fidelity metrics (PSNR, SSIM, LPIPS) as well as perceptual quality metrics (NIQE, MANIQA, MUSIQ) across multiple datasets, including <strong>DrealSR</strong>, <strong>RealSR</strong>, <strong>RealLR200</strong>, and <strong>RealLQ250</strong>. Overall, our method demonstrates competitive and generally superior performance across perceptual quality metrics.
-  
                 </p>
             </div>
         </div>
       </div>
+
+      <div class="columns is-centered" style="margin-top: 30px;">
+        <div class="column is-10 has-text-centered">
+            <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
+                <span style="color: var(--lab-light);">Ablation Studies & Extended Analysis</span>
+            </h4>
+            
+            <img src="./images/supp_table_7.png" alt="Table 7: Extended Ablation Study" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 15px;">
+            <div class="content has-text-justified" style="margin-bottom: 30px; color: #bbb;">
+                <p>
+                    <strong>Table 7.</strong> Extended ablation study analyzing the independent contributions of the IntraCL, InterCL, FAW, and FAM modules. Results highlight the crucial role of frequency-aligned distillation in achieving optimal perceptual and structural fidelity.
+                </p>
+            </div>
+
+            <img src="./images/supp_table_8.png" alt="Table 8: Performance on Unseen Degradations" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 15px;">
+            <div class="content has-text-justified" style="color: #bbb;">
+                <p>
+                    <strong>Table 8.</strong> Robustness evaluation on additional real-world datasets with completely unseen degradation types. FRAMER maintains highly competitive scores across no-reference metrics, validating its strong generalization capabilities.
+                </p>
+            </div>
+        </div>
+      </div>
+
     </div>
 </section>
 
@@ -519,9 +544,9 @@
                     <h4 class="title is-4 has-text-centered" style="margin-bottom: 20px;">
                         <span style="color: var(--lab-light);">Synthetic Degradation</span> (DrealSR, RealSR Dataset)
                     </h4>
-                    <img src="./images/figure_10.png" alt="Figure 10: Comparisons on datasets with Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <img src="./images/supp_figure_10.png" alt="Figure 10: Extensive Comparisons on datasets with Ground Truth" style="width: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <p class="is-size-6 has-text-justified mt-4" style="color: #ccc;">
-                        <strong>Figure 10.</strong> Qualitative comparisons on datasets with Ground Truth (DrealSR, RealSR). We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
+                        <strong>Figure 10.</strong> Extended qualitative comparisons on datasets with Ground Truth (DrealSR, RealSR) from our supplementary material. We compare FRAMER against state-of-the-art methods (SwinIR, ResShift, SeeSR, PiSA-SR, DreamClear, DiT4SR). 
                         Red arrows indicate structural errors (e.g., hallucinations, object distortion), while Yellow arrows point to textural defects. FRAMER consistently mitigates these artifacts, producing sharper edges and faithful textures.
                     </p>
                 </div>
